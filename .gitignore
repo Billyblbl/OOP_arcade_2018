@@ -1,0 +1,9 @@
+**/*.o
+**/*.txt
+**/*.json
+**/*.debug
+**/a.out
+**/*.so
+**/*tests/*
+**/arcade
+**/*.pdf
