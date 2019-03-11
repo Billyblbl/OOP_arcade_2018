@@ -13,6 +13,8 @@
 class IGraphic {
 	public:
 
+    virtual ~IGraphic() = default;
+
     virtual void    setEntity(int x, int y, IDisplayable &entity) = 0;
     virtual void    update() = 0;
     virtual void    setSize(int x, int y) = 0;

@@ -8,6 +8,8 @@
 #ifndef IDISPLAYABLE_HPP_
     #define IDISPLAYABLE_HPP_
 
-class IDisplayable {};
+class IDisplayable {
+    virtual ~IDisplayable() = default;
+};
 
 #endif /* !IDISPLAYABLE_HPP_ */

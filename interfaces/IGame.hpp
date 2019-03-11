@@ -15,6 +15,8 @@
 class IGame {
 	public:
 
+    virtual ~IGame() = default;
+
     typedef std::function<void ()>  Action;
 
     virtual bool update(std::chrono::nanoseconds deltaT) = 0;
