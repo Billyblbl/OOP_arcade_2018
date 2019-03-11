@@ -6,9 +6,9 @@
 ##
 
 export CPPFLAGS	+=	-Werror
-export CPPFLAGS	+=	-W -Wall -Wextra
+export CPPFLAGS	+=	-W -Wall -Wextra -std=c++17
 export CPPFLAGS +=	-I$(shell pwd)/interfaces
-export CPPFLAGS	+=	-g3
+#export CPPFLAGS	+=	-g3
 
 SUBSYSTEM	=	core\
 				games\
@@ -20,6 +20,9 @@ CMDS		=	obj\
 				re
 
 all: $(SUBSYSTEM)
+
+debug: export CPPFLAGS += -g3
+debug: re
 
 $(SUBSYSTEM):
 	$(MAKE) -C $@_build
