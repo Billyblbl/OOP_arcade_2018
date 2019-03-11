@@ -17,7 +17,7 @@ class IGame {
 
     typedef std::function<void ()>  Action;
 
-    virtual void update(std::chrono::nanoseconds deltaT) = 0;
+    virtual bool update(std::chrono::nanoseconds deltaT) = 0;
     virtual const Action  &getKeybind(char key) const = 0;
     virtual void    setGraphic(IGraphic &handler) = 0;
 
