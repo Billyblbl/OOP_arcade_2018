@@ -9,11 +9,14 @@ BIN =	arcade
 
 LINK =	../$(BIN)
 
-SRC	=	src/main.cpp
+SRC	=	src/Core.cpp\
+		src/main.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
 
 CPPFLAGS	+=	-I./include
+
+LDFLAGS		+=	-ldl
 
 all:	link
 
@@ -22,7 +25,7 @@ link:	$(LINK)
 obj:	$(OBJ)
 
 $(BIN):	obj
-	$(CXX) -o $(BIN) $(LDFLAGS) $(OBJ)
+	$(CXX) -o $(BIN) $(OBJ) $(LDFLAGS)
 
 $(LINK): $(BIN)
 	ln -s $(CURDIR)/$(BIN) $(LINK)
