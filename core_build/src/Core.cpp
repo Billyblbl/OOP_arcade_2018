@@ -6,6 +6,7 @@
 */
 
 #include <iostream>
+#include <string.h>
 #include "Core.hpp"
 
 //the small bit of code in the constructor about the termios thingy
@@ -18,18 +19,20 @@ Core::Core(const std::string &path):
 {
     std::cin.sync_with_stdio();
     if (tcgetattr(0, &_oldSettings))
-		throw std::runtime_error(std::string(__func__) + " : tcgetattr error");
+		throw std::runtime_error(std::string(__func__) + " : tcgetattr : " + strerror(errno));
    	struct termios t = _oldSettings;
     t.c_lflag &= (~ICANON & ~ECHO);
     if (tcsetattr(0, TCSANOW, &t))
-		throw std::runtime_error(std::string(__func__) + " : tcsetattr error");
+		throw std::runtime_error(std::string(__func__) + " : tcsetattr : " + strerror(errno));
     setbuf(stdin, nullptr);
 }
 
 Core::~Core()
 {
-	if (tcsetattr(0, TCSANOW, &_oldSettings))
-		std::cerr << __func__ << " : tcsetattr error";
+	if (tcsetattr(0, TCSANOW, &_oldSettings)) {
+		std::cerr << __func__ << " : tcsetattr : " << strerror(errno) << std::endl;
+		std::cerr << "This error might cause weird behavior on your terminal" << std::endl;
+	}
 }
 
 void	Core::addGame(const std::string &path)
