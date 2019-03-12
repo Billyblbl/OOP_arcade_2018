@@ -19,9 +19,20 @@ class IGame {
 
     typedef std::function<void ()>  Action;
 
-    virtual bool update(std::chrono::nanoseconds deltaT) = 0;
-    virtual const Action  &getKeybind(char key) const = 0;
-    virtual void    setGraphic(IGraphic &handler) = 0;
+    enum KeyCode : int32_t {
+        arrowUp = 0x415b1b,
+        arrowDown = 0x425b1b,
+        arrowRight = 0x435b1b,
+        arrowLeft = 0x445b1b,
+        home = 0x485b1b,
+        end = 0x465b1b,
+        pageUp = 0x355b1b,
+        pageDown = 0x365b1b
+    };
+
+    virtual bool            update(std::chrono::nanoseconds deltaT) = 0;
+    virtual const Action    &getKeybind(int32_t key) const = 0;
+    virtual void            setGraphic(IGraphic &handler) = 0;
 
 };
 
