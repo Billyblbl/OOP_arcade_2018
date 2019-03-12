@@ -8,6 +8,7 @@
 #ifndef ARCADE_HPP_
 	#define ARCADE_HPP_
 
+	#include <termios.h>
 	#include <string>
 	#include <memory>
 	#include <vector>
@@ -18,7 +19,7 @@
 class Core {
 	public:
 		Core(const std::string &path);
-		~Core() = default;
+		~Core();
 
 		void	addGame(const std::string &path);
 		void	setGraphic(const std::string &path);
@@ -32,10 +33,16 @@ class Core {
 	private:
 
 		GameHandler			&getCurrentGame();
+		bool				keyPressed() const;
+		int32_t				getKeyStroke();
 
 		GraphicHandler			_screen;
 		GameVector              _games;
 		GameVector::iterator    _currentGame;
+
+		//term data
+
+		struct termios			_oldSettings;
 };
 
 #endif /* !ARCADE_HPP_ */

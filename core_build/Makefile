@@ -10,6 +10,7 @@ BIN =	arcade
 LINK =	../$(BIN)
 
 SRC	=	src/Core.cpp\
+		src/Control.cpp\
 		src/main.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
