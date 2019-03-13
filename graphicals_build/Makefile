@@ -17,7 +17,7 @@ CMDS		=	obj\
 all: links
 
 links: $(LIBS)
-	$(foreach LIB, $(LIBS), ln -s $(LIBS)/lib_arcade_$(LIB).so ../lib/lib_arcade_$(LIB).so)
+	$(foreach LIB, $(LIBS), ln -sf $(LIBS)/lib_arcade_$(LIB).so ../lib/lib_arcade_$(LIB).so)
 
 $(LIBS):
 	$(MAKE) -C $@

@@ -19,7 +19,7 @@ all: links
 games:	$(GAMES)
 
 links: $(GAMES)
-	$(foreach GAME, $(GAMES), ln -s $(GAMES)/lib_arcade_$(GAME).so ../games/lib_arcade_$(GAME).so)
+	$(foreach GAME, $(GAMES), ln -sf $(GAMES)/lib_arcade_$(GAME).so ../games/lib_arcade_$(GAME).so)
 
 $(GAMES):
 	$(MAKE) -C $@

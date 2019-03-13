@@ -25,7 +25,7 @@ $(BIN):	obj
 	$(CXX) -o $(BIN) $(LDFLAGS) $(OBJ)
 
 $(LINK): $(BIN)
-	ln -s $(CURDIR)/$(BIN) $(LINK)
+	ln -sf $(CURDIR)/$(BIN) $(LINK)
 
 clean:
 	rm -f $(OBJ)
