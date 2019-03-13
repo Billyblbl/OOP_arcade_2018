@@ -11,13 +11,15 @@ LINK =	../$(BIN)
 
 SRC	=	src/Core.cpp\
 		src/Control.cpp\
+		src/DirectoryMenu.cpp\
+		src/MenuEntry.cpp\
 		src/main.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
 
 CPPFLAGS	+=	-I./include
 
-LDFLAGS		+=	-ldl
+LDFLAGS		+=	-ldl -lstdc++fs
 
 all:	link
 
