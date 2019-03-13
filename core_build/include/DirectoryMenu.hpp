@@ -26,15 +26,16 @@ class DirectoryMenu {
 		};
 
 		typedef std::vector<MenuEntry>	Menu;
+		typedef Menu::iterator			iterator;
 
 		DirectoryMenu(const std::string &dir,
 					  const std::string &prefix = "",
 					  const std::string &suffix = "");
 		~DirectoryMenu() = default;
 
-		void			refresh();
-		Menu::iterator	begin();
-		Menu::iterator	end();
+		void		refresh();
+		iterator	begin();
+		iterator	end();
 
 		const MenuEntry	&operator[](std::size_t idx) const;
 

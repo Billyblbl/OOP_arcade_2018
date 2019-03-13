@@ -29,12 +29,12 @@ void	DirectoryMenu::refresh()
 	}
 }
 
-DirectoryMenu::Menu::iterator	DirectoryMenu::begin()
+DirectoryMenu::iterator	DirectoryMenu::begin()
 {
 	return _entries.begin();
 }
 
-DirectoryMenu::Menu::iterator	DirectoryMenu::end()
+DirectoryMenu::iterator	DirectoryMenu::end()
 {
 	return _entries.end();
 }
