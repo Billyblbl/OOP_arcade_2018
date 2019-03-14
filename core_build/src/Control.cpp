@@ -31,15 +31,15 @@ int32_t	Core::getKeyStroke()
 
 void	Core::run()
 {
-	using arcadeClock = std::chrono::high_resolution_clock;
-	using timePoint = std::chrono::time_point<arcadeClock>;
-	bool		running = true;
-	timePoint	last = arcadeClock::now();
+	bool				running = true;
+	TimePoint<Second>	start(std::chrono::time_point_cast<Second>(Clock::now()));
+	TimePoint<Nano>		last(start);
 	while (running) {
-		timePoint	now = arcadeClock::now();
 		if (keyPressed())
-			getCurrentGame()->getKeybind(getKeyStroke())();
-		running = getCurrentGame()->update(now - last);
+			getCurrentGame()->handleKey(getKeyStroke());
+		TimePoint<Nano>		now(Clock::now());
+		TimePoint<Second>	secNow(std::chrono::time_point_cast<Second>(now));
+		running = getCurrentGame()->update(now - last, secNow - start);
 		last = now;
 	}
 }
