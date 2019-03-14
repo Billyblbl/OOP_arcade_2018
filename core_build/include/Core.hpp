@@ -28,6 +28,7 @@ class Core {
 		typedef	LibHandler<IGame> GameHandler;
 		typedef	LibHandler<IGraphic> GraphicHandler;
 		typedef std::vector<GameHandler> GameVector;
+		typedef std::unique_ptr<GraphicHandler>	GHandlerPtr;
 
 		typedef std::chrono::high_resolution_clock Clock;
 
@@ -41,10 +42,11 @@ class Core {
 	private:
 
 		GameHandler			&getCurrentGame();
+		GraphicHandler		&getScreen();
 		bool				keyPressed() const;
 		int32_t				getKeyStroke();
 
-		GraphicHandler			_screen;
+		GHandlerPtr				_screen;
 		GameVector              _games;
 		GameVector::iterator    _currentGame;
 

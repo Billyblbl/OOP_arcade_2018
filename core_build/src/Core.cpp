@@ -13,7 +13,7 @@
 //is a bit of black magic to prevent input buffering
 
 Core::Core(const std::string &path):
-	_screen(path),
+	_screen(new GraphicHandler(path)),
 	_games({}),
 	_currentGame(_games.begin())
 {
@@ -37,18 +37,33 @@ Core::~Core()
 
 void	Core::addGame(const std::string &path)
 {
+	if (_games.size() > 0)
+		getCurrentGame()->onDisable();
 	_games.emplace_back(path);
 	_currentGame = _games.end() - 1;
-	getCurrentGame()->setGraphic(_screen);
+	getCurrentGame()->setGraphic(getScreen());
+	getCurrentGame()->onEnable();
 }
 
 void	Core::setGraphic(const std::string &path)
 {
-	_screen.reset(path);
+	if (_games.size() > 0)
+		getCurrentGame()->onDisable();
+	GraphicHandler	*newHandler = new GraphicHandler(path);
+	for (auto game : _games)
+		game->setGraphic(*newHandler);
+	_screen.reset(newHandler);
+	if (_games.size() > 0)
+		getCurrentGame()->onEnable();
 }
 
 Core::GameHandler		&Core::getCurrentGame()
 {
 	return *_currentGame;
+}
+
+Core::GraphicHandler	&Core::getScreen()
+{
+	return *_screen;
 }
 
