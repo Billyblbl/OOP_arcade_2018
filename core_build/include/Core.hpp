@@ -29,6 +29,14 @@ class Core {
 		typedef	LibHandler<IGraphic> GraphicHandler;
 		typedef std::vector<GameHandler> GameVector;
 
+		typedef std::chrono::high_resolution_clock Clock;
+
+		typedef	std::chrono::nanoseconds	Nano;
+		typedef std::chrono::seconds		Second;
+
+		template<typename T>
+		using TimePoint = std::chrono::time_point<Clock, T>;
+
 	protected:
 	private:
 
