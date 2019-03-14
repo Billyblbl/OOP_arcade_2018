@@ -21,7 +21,7 @@ Core::Core(const std::string &path):
     if (tcgetattr(0, &_oldSettings))
 		throw std::runtime_error(std::string(__func__) + " : tcgetattr : " + strerror(errno));
    	struct termios t = _oldSettings;
-    t.c_lflag &= (~ICANON & ~ECHO);
+    t.c_lflag &= (~(unsigned)ICANON & ~(unsigned)ECHO);
     if (tcsetattr(0, TCSANOW, &t))
 		throw std::runtime_error(std::string(__func__) + " : tcsetattr : " + strerror(errno));
     setbuf(stdin, nullptr);

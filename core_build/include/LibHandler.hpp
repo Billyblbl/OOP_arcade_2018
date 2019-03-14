@@ -53,7 +53,7 @@ void	LibHandler<C>::open(const std::string &path)
 	_lib = dlopen(path.c_str(), RTLD_NOW);
 	if (!_lib)
 		throw std::runtime_error(std::string(__func__) + " : " + dlerror());
-	_object = static_cast<C *>(dlsym(_lib, "toLoad"));
+	_object = static_cast<C *>(dlsym(_lib, "LibObject"));
 	if (!_object)
 		throw std::runtime_error(std::string(__func__) + " : " + dlerror());
 }
@@ -61,7 +61,6 @@ void	LibHandler<C>::open(const std::string &path)
 template<class C>
 void	LibHandler<C>::close()
 {
-	delete _object;
 	if (dlclose(_lib))
 		throw std::runtime_error(std::string(__func__) + " : " + dlerror());
 }
