@@ -36,6 +36,7 @@ class DirectoryMenu {
 		void		refresh();
 		iterator	begin();
 		iterator	end();
+		std::size_t	length();
 
 		const MenuEntry	&operator[](std::size_t idx) const;
 

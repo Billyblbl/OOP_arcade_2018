@@ -23,7 +23,7 @@ void	DirectoryMenu::refresh()
 {
 	_entries.clear();
 	using dirIterator = std::filesystem::directory_iterator;
-    for (const auto & entry : dirIterator(_dir)) {
+		for (const auto & entry : dirIterator(_dir)) {
 		if (entry.is_regular_file())
 			_entries.emplace_back(entry.path(), _prefix, _suffix);
 	}
@@ -37,6 +37,11 @@ DirectoryMenu::iterator	DirectoryMenu::begin()
 DirectoryMenu::iterator	DirectoryMenu::end()
 {
 	return _entries.end();
+}
+
+std::size_t							DirectoryMenu::length()
+{
+	return _entries.size();
 }
 
 const DirectoryMenu::MenuEntry	&DirectoryMenu::operator[](std::size_t idx) const
