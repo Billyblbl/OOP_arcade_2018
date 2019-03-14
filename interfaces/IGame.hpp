@@ -30,9 +30,11 @@ class IGame {
         pageDown = 0x365b1b
     };
 
-    virtual bool            update(std::chrono::nanoseconds deltaT) = 0;
-    virtual const Action    &getKeybind(int32_t key) const = 0;
-    virtual void            setGraphic(IGraphic &handler) = 0;
+    virtual bool    update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime) = 0;
+    virtual void    handleKey(int32_t key) = 0;
+    virtual void    setGraphic(IGraphic &handler) = 0;
+    virtual void    onEnable() = 0;
+    virtual void    onDisable() = 0;
 
 };
 
