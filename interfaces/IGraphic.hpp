@@ -15,9 +15,12 @@ class IGraphic {
 
     virtual ~IGraphic() = default;
 
-    virtual void    setEntity(int x, int y, IDisplayable &entity) = 0;
-    virtual void    update() = 0;
-    virtual void    setSize(int x, int y) = 0;
+    virtual void            setEntity(float x, float y, IDisplayable &entity) = 0;
+    virtual void            write(int x, int y, const std::string &text) = 0;
+    virtual void            setSize(int x, int y) = 0;
+    virtual void            update() = 0;
+    virtual void            clear() = 0;
+    virtual IDisplayable    *createDisplayable(const std::string &name) = 0;
 
 };
 
