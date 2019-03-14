@@ -6,7 +6,21 @@
 ##
 
 export CPPFLAGS	+=	-Werror
-export CPPFLAGS	+=	-W -Wall -Wextra -std=c++17
+export CPPFLAGS	+=	-W\
+					-Wall\
+					-Wextra\
+					-Wshadow\
+					-Wold-style-cast\
+					-Wcast-align\
+					-Wunused\
+					-Woverloaded-virtual\
+					-Wpedantic\
+					-Wsign-conversion\
+					-Wlogical-op\
+					-Wuseless-cast\
+					-Wno-non-virtual-dtor\
+					-std=c++17
+
 export CPPFLAGS +=	-I$(shell pwd)/interfaces
 #export CPPFLAGS	+=	-g3
 
