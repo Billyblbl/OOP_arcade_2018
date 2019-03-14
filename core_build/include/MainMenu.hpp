@@ -27,6 +27,12 @@ class MainMenu : public IGame {
 		const std::string	&getGame() const;
 		const std::string	&getGlib() const;
 
+		bool	hasSelectedGame() const;
+		bool	hasSelectedGlib() const;
+
+		void	incGameCursor(bool reverse = false);
+		void	incGlibCursor(bool reverse = false);
+
 		typedef	std::unique_ptr<IDisplayable>	DisplayablePtr;
 
 	protected:
@@ -40,6 +46,9 @@ class MainMenu : public IGame {
 
 		DisplayablePtr			_gameCursorEntity;
 		DisplayablePtr			_glibCursorEntity;
+
+		bool					_selectedGame;
+		bool					_selectedGlib;
 
 		std::unordered_map<int32_t, Action>	_keyBinds;
 

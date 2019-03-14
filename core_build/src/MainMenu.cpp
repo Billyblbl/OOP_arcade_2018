@@ -16,10 +16,13 @@ MainMenu::MainMenu():
 	_gameCursorEntity(nullptr),
 	_glibCursorEntity(nullptr)
 {
-	_keyBinds[KeyCode::arrowUp] = [this](){this->_gameCursor--;};
-	_keyBinds[KeyCode::arrowDown] = [this](){this->_gameCursor++;};
-	_keyBinds[KeyCode::pageUp] = [this](){this->_glibCursor--;};
-	_keyBinds[KeyCode::pageDown] = [this](){this->_glibCursor++;};
+	_keyBinds[KeyCode::arrowUp] = [this](){this->incGameCursor(true);};
+	_keyBinds[KeyCode::arrowDown] = [this](){this->incGameCursor();};
+	_keyBinds[KeyCode::pageUp] = [this](){this->incGlibCursor(true);};
+	_keyBinds[KeyCode::pageDown] = [this](){this->incGlibCursor();};
+	_keyBinds['r'] = [this](){this->refresh();};
+	_keyBinds['\n'] = [this](){this->_selectedGame = true;};
+	_keyBinds['g'] = [this](){this->_selectedGlib = true;};
 }
 
 bool	MainMenu::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime)
@@ -47,6 +50,8 @@ void	MainMenu::setGraphic(IGraphic &handler)
 
 void	MainMenu::refresh()
 {
+	_selectedGame = false;
+	_selectedGlib = false;
 	_gameList.refresh();
 	_glibList.refresh();
 	_gameCursor = _gameList.begin();
@@ -82,3 +87,14 @@ const std::string	&MainMenu::getGlib() const
 {
 	return _glibCursor->path;
 }
+
+bool	MainMenu::hasSelectedGame() const
+{
+	return _selectedGame;
+}
+
+bool	MainMenu::hasSelectedGlib() const
+{
+	return _selectedGlib;
+}
+
