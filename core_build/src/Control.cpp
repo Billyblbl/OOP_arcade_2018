@@ -34,8 +34,7 @@ void	Core::run()
 	bool				running = true;
 	TimePoint<Second>	start(std::chrono::time_point_cast<Second>(Clock::now()));
 	TimePoint<Nano>		last(start);
-	// IGame				&game = ((_games.size() > 0) ? getCurrentGame() : _mainMenu);
-	IGame				&game = getCurrentGame();
+	IGame				&game = ((_games.size() > 0) ? *getCurrentGame() : _mainMenu);
 	while (running) {
 		if (keyPressed())
 			game.handleKey(getKeyStroke());

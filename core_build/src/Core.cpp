@@ -25,6 +25,7 @@ Core::Core(const std::string &path):
     if (tcsetattr(0, TCSANOW, &t))
 		throw std::runtime_error(std::string(__func__) + " : tcsetattr : " + strerror(errno));
     setbuf(stdin, nullptr);
+		_mainMenu.setGraphic(*_screen);
 }
 
 Core::~Core()
@@ -39,6 +40,8 @@ void	Core::addGame(const std::string &path)
 {
 	if (_games.size() > 0)
 		getCurrentGame()->onDisable();
+	else
+		_mainMenu.onDisable();
 	_games.emplace_back(path);
 	_currentGame = _games.end() - 1;
 	getCurrentGame()->setGraphic(getScreen());
@@ -49,12 +52,17 @@ void	Core::setGraphic(const std::string &path)
 {
 	if (_games.size() > 0)
 		getCurrentGame()->onDisable();
+	else
+		_mainMenu.onDisable();
 	GraphicHandler	*newHandler = new GraphicHandler(path);
+	_mainMenu.setGraphic(*newHandler);
 	for (auto game : _games)
 		game->setGraphic(*newHandler);
 	_screen.reset(newHandler);
 	if (_games.size() > 0)
 		getCurrentGame()->onEnable();
+	else
+		_mainMenu.onEnable();
 }
 
 Core::GameHandler		&Core::getCurrentGame()

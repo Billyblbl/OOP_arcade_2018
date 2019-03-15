@@ -15,6 +15,7 @@
 	#include "IGraphic.hpp"
 	#include "IGame.hpp"
 	#include "LibHandler.hpp"
+	#include "MainMenu.hpp"
 
 class Core {
 	public:
@@ -49,6 +50,7 @@ class Core {
 		GHandlerPtr				_screen;
 		GameVector              _games;
 		GameVector::iterator    _currentGame;
+		MainMenu				_mainMenu;
 
 		//term data
 
