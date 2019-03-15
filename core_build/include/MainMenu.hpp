@@ -14,6 +14,53 @@
 
 class MainMenu : public IGame {
 	public:
+
+		typedef	std::unique_ptr<IDisplayable>	DisplayablePtr;
+
+		struct Position2F {
+			float	x;
+			float	y;
+		};
+
+		//kinda looks like an union in some sense
+		//might be a good idea to explore, to avoid unnecessary code
+		class Cursor {
+			public:
+
+			Cursor(DirectoryMenu::iterator it, IDisplayable *entity, Position2F position);
+
+			//act as iterator
+			Cursor	&operator++();
+			Cursor	&operator--();
+			Cursor	&operator=(DirectoryMenu::iterator rhs);
+			bool	operator==(DirectoryMenu::iterator rhs) const;
+			bool	operator!=(DirectoryMenu::iterator rhs) const;
+			operator DirectoryMenu::MenuEntry &();
+			DirectoryMenu::MenuEntry		*operator->();
+			const DirectoryMenu::MenuEntry	*operator->() const;
+			DirectoryMenu::MenuEntry		&operator*();
+			const DirectoryMenu::MenuEntry	&operator*() const;
+
+			//act as entity
+			operator IDisplayable &();
+			void		reset(IDisplayable *newEntity);
+
+			Position2F	getPos() const;
+			void		setPos(Position2F pos);
+
+			//both (cursor)
+			bool		isSelected() const;
+			void		select(bool on = true);
+
+			// private:
+
+			DirectoryMenu::iterator	_iterator;
+			DisplayablePtr			_entity;
+			Position2F				_position;
+			bool					_selected;
+
+		};
+
 		MainMenu();
 		~MainMenu() = default;
 
@@ -23,32 +70,26 @@ class MainMenu : public IGame {
 		void	onEnable() override;
 		void	onDisable() override;
 
-		void				refresh();
 		const std::string	&getGame() const;
 		const std::string	&getGlib() const;
 
 		bool	hasSelectedGame() const;
 		bool	hasSelectedGlib() const;
 
-		void	incGameCursor(bool reverse = false);
-		void	incGlibCursor(bool reverse = false);
-
-		typedef	std::unique_ptr<IDisplayable>	DisplayablePtr;
-
 	protected:
 	private:
 
-		DirectoryMenu			_gameList;
-		DirectoryMenu			_glibList;
-		DirectoryMenu::iterator	_gameCursor;
-		DirectoryMenu::iterator	_glibCursor;
-		IGraphic				*_handler;
+		void	refresh();
+		void	incGameCursor(bool reverse = false);
+		void	incGlibCursor(bool reverse = false);
 
-		DisplayablePtr			_gameCursorEntity;
-		DisplayablePtr			_glibCursorEntity;
+		DirectoryMenu	_gameList;
+		DirectoryMenu	_glibList;
+		Cursor			_gameCursor;
+		Cursor			_glibCursor;
+		IGraphic		*_screen;
 
-		bool					_selectedGame;
-		bool					_selectedGlib;
+		DisplayablePtr			_emptyEntity;
 
 		std::unordered_map<int32_t, Action>	_keyBinds;
 

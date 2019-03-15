@@ -13,6 +13,9 @@ SRC	=	src/Core.cpp\
 		src/Control.cpp\
 		src/DirectoryMenu.cpp\
 		src/MenuEntry.cpp\
+		src/MainMenu.cpp\
+		src/MainMenuCursor.cpp\
+		src/MainMenuKeybinds.cpp\
 		src/main.cpp
 
 OBJ	=	$(SRC:.cpp=.o)

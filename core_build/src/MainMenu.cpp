@@ -10,19 +10,17 @@
 MainMenu::MainMenu():
 	_gameList("./games", "lib_arcade_", ".so"),
 	_glibList("./lib", "lib_arcade_", ".so"),
-	_gameCursor(_gameList.begin()),
-	_glibCursor(_glibList.begin()),
-	_handler(nullptr),
-	_gameCursorEntity(nullptr),
-	_glibCursorEntity(nullptr)
+	_gameCursor(_gameList.begin(), nullptr, Position2F({0.0f, 0.0f})),
+	_glibCursor(_glibList.begin(), nullptr, Position2F({50.0f, 0.0f})),
+	_screen(nullptr)
 {
 	_keyBinds[KeyCode::arrowUp] = [this](){this->incGameCursor(true);};
 	_keyBinds[KeyCode::arrowDown] = [this](){this->incGameCursor();};
 	_keyBinds[KeyCode::pageUp] = [this](){this->incGlibCursor(true);};
 	_keyBinds[KeyCode::pageDown] = [this](){this->incGlibCursor();};
 	_keyBinds['r'] = [this](){this->refresh();};
-	_keyBinds['\n'] = [this](){this->_selectedGame = true;};
-	_keyBinds['g'] = [this](){this->_selectedGlib = true;};
+	_keyBinds['\n'] = [this](){this->_gameCursor.select();};
+	_keyBinds['g'] = [this](){this->_glibCursor.select();};
 }
 
 bool	MainMenu::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime)
@@ -32,7 +30,6 @@ bool	MainMenu::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTi
 	(void)upTime;
 }
 
-//(current interface signature may not be relevant soon TM)
 void	MainMenu::handleKey(int32_t key)
 {
 	if (_keyBinds.find(key) != _keyBinds.end())
@@ -41,33 +38,32 @@ void	MainMenu::handleKey(int32_t key)
 
 void	MainMenu::setGraphic(IGraphic &handler)
 {
-	_handler = &handler;
-	_handler->setSize(100, 100);
-	_handler->clear();
-	_gameCursorEntity.reset(_handler->createDisplayable("menu.cursor"));
-	_glibCursorEntity.reset(_handler->createDisplayable("menu.cursor"));
+	_screen = &handler;
+	_screen->setSize(100, 100);
+	_screen->clear();
+	_gameCursor.reset(_screen->createDisplayable("menu.cursor"));
+	_glibCursor.reset(_screen->createDisplayable("menu.cursor"));
+	_emptyEntity.reset(_screen->createDisplayable("global.empty"));
+	refresh();
 }
 
 void	MainMenu::refresh()
 {
-	_selectedGame = false;
-	_selectedGlib = false;
+	_gameCursor.select(false);
+	_glibCursor.select(false);
 	_gameList.refresh();
 	_glibList.refresh();
 	_gameCursor = _gameList.begin();
 	_glibCursor = _glibList.begin();
-	int	i = 0;
-	for (auto &game : _gameList) {
-		if (&game == &(*_gameCursor))
-			_handler->setEntity(0.0, i, *_gameCursorEntity);
-		_handler->write(1, i++, game.name);
-	}
-	int i = 0;
-	for (auto &lib : _glibList) {
-		if (&lib == &(*_glibCursor))
-			_handler->setEntity(50.0, i, *_glibCursorEntity);
-		_handler->write(51, i++, lib.name);
-	}
+	_gameCursor.setPos({0.0, 0.0});
+	_glibCursor.setPos({50.0, 0.0});
+	_screen->clear();
+	for (unsigned short i = 1; i < _gameList.length() && i <= 50; i++)
+		_screen->write(1, i, _gameList[i].name);
+	for (unsigned short i = 1; i < _glibList.length() && i <= 50; i++)
+		_screen->write(1, i, _glibList[i].name);
+	_screen->setEntity(_gameCursor.getPos().x, _gameCursor.getPos().y, _gameCursor);
+	_screen->setEntity(_glibCursor.getPos().x, _glibCursor.getPos().y, _glibCursor);
 }
 
 void	MainMenu::onEnable()
@@ -90,11 +86,11 @@ const std::string	&MainMenu::getGlib() const
 
 bool	MainMenu::hasSelectedGame() const
 {
-	return _selectedGame;
+	return _gameCursor.isSelected();
 }
 
 bool	MainMenu::hasSelectedGlib() const
 {
-	return _selectedGlib;
+	return _glibCursor.isSelected();
 }
 
