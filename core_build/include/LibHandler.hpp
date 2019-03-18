@@ -25,6 +25,9 @@ class LibHandler {
 		C		*operator->();
 		const C	*operator->() const;
 
+		C		&operator*();
+		const C	&operator*() const;
+
 	protected:
 	private:
 
@@ -94,6 +97,18 @@ template<class C>
 const C	*LibHandler<C>::operator->() const
 {
 	return _object;
+}
+
+template<class C>
+C		&LibHandler<C>::operator*()
+{
+	return *_object;
+}
+
+template<class C>
+const C	&LibHandler<C>::operator*() const
+{
+	return *_object;
 }
 
 #endif /* !LIBHANDLER_HPP_ */

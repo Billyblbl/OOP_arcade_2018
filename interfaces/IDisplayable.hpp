@@ -9,6 +9,7 @@
     #define IDISPLAYABLE_HPP_
 
 class IDisplayable {
+    public:
     virtual ~IDisplayable() = default;
 };
 

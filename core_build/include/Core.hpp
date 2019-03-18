@@ -15,6 +15,7 @@
 	#include "IGraphic.hpp"
 	#include "IGame.hpp"
 	#include "LibHandler.hpp"
+	#include "MainMenu.hpp"
 
 class Core {
 	public:
@@ -41,15 +42,16 @@ class Core {
 	protected:
 	private:
 
-		IGame				&getCurrentGame();
-		GameHandler			&getCurrentHandler();
-		GraphicHandler		&getScreen();
-		bool				keyPressed() const;
-		int32_t				getKeyStroke();
+		IGame		&getCurrentGame();
+		GameHandler	&getCurrentHandler();
+		IGraphic	&getScreen();
+		bool		keyPressed() const;
+		int32_t		getKeyStroke();
 
 		GHandlerPtr				_screen;
 		GameVector              _games;
 		GameVector::iterator    _currentGame;
+		MainMenu				_mainMenu;
 
 		//term data
 

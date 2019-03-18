@@ -22,6 +22,7 @@ class IGraphic {
     virtual void            clear() = 0;
     virtual IDisplayable    *createDisplayable(const std::string &name) = 0;
 
+
 };
 
 #endif /* !IGRAPHIC_HPP_ */

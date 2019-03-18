@@ -34,7 +34,6 @@ void	Core::run()
 	bool				running = true;
 	TimePoint<Second>	start(std::chrono::time_point_cast<Second>(Clock::now()));
 	TimePoint<Nano>		last(start);
-	// IGame				&game = ((_games.size() > 0) ? getCurrentGame() : _mainMenu);
 	IGame				&game = getCurrentGame();
 	while (running) {
 		if (keyPressed())
@@ -42,7 +41,7 @@ void	Core::run()
 		TimePoint<Nano>		now(Clock::now());
 		TimePoint<Second>	secNow(std::chrono::time_point_cast<Second>(now));
 		running = game.update(now - last, secNow - start);
-		getScreen()->update();
+		getScreen().update();
 		last = now;
 		if (!running) {
 			game.onDisable();
