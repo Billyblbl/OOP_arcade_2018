@@ -38,32 +38,36 @@ Core::~Core()
 void	Core::addGame(const std::string &path)
 {
 	if (_games.size() > 0)
-		getCurrentGame()->onDisable();
+		getCurrentGame().onDisable();
 	_games.emplace_back(path);
 	_currentGame = _games.end() - 1;
-	getCurrentGame()->setGraphic(getScreen());
-	getCurrentGame()->onEnable();
+	getCurrentGame().setGraphic(getScreen());
+	getCurrentGame().onEnable();
 }
 
 void	Core::setGraphic(const std::string &path)
 {
 	if (_games.size() > 0)
-		getCurrentGame()->onDisable();
+		getCurrentGame().onDisable();
 	GraphicHandler	*newHandler = new GraphicHandler(path);
 	for (auto game : _games)
 		game->setGraphic(*newHandler);
 	_screen.reset(newHandler);
 	if (_games.size() > 0)
-		getCurrentGame()->onEnable();
+		getCurrentGame().onEnable();
 }
 
-Core::GameHandler		&Core::getCurrentGame()
+Core::GameHandler		&Core::getCurrentHandler()
 {
 	return *_currentGame;
+}
+
+IGame					&Core::getCurrentGame()
+{
+	return _currentGame->operator IGame &();
 }
 
 Core::GraphicHandler	&Core::getScreen()
 {
 	return *_screen;
 }
-

@@ -41,7 +41,8 @@ class Core {
 	protected:
 	private:
 
-		GameHandler			&getCurrentGame();
+		IGame				&getCurrentGame();
+		GameHandler			&getCurrentHandler();
 		GraphicHandler		&getScreen();
 		bool				keyPressed() const;
 		int32_t				getKeyStroke();

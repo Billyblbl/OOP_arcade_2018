@@ -44,6 +44,11 @@ void	Core::run()
 		running = game.update(now - last, secNow - start);
 		getScreen()->update();
 		last = now;
+		if (!running) {
+			game.onDisable();
+			_games.erase(_currentGame);
+			_currentGame = _games.begin();
+		}
 	}
 }
 
