@@ -30,10 +30,23 @@ class IGame {
         pageDown = 0x365b1b
     };
 
+    //Runs 1 frame of the game
+    //deltaT is the duration between last frame and this one,
+    //upTime is the duration from the start of the game up to now
     virtual bool    update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime) = 0;
+
+    //React to the keypressed with the action corresponding to key
     virtual void    handleKey(int32_t key) = 0;
+
+    //Apply a new graphic handler to the game
     virtual void    setGraphic(IGraphic &handler) = 0;
+
+    //Called when the game is enabled by the core
+    //exemple use could be for drawing backgroud board, in order to not
+    //redraw it every frame
     virtual void    onEnable() = 0;
+
+    //Same as onEnable, but when the game is disabled by the core
     virtual void    onDisable() = 0;
 
 };
