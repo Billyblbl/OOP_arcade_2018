@@ -33,12 +33,19 @@ CMDS		=	obj\
 				fclean\
 				re
 
+DIRS		=	./lib/\
+				./games/\
+				./ressources/
+
 all: $(SUBSYSTEM)
 
 debug: export CPPFLAGS += -g3
 debug: re
 
-$(SUBSYSTEM):
+$(DIRS):
+	$(foreach DIR, $(DIRS), mkdir -p $(DIR))
+
+$(SUBSYSTEM): $(DIRS)
 	$(MAKE) -C $@_build
 
 $(CMDS):

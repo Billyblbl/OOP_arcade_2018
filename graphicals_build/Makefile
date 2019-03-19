@@ -11,17 +11,30 @@ LIBS	= sfml
 
 LINKS	=	$(addprefix ../lib/lib_arcade_, $(addsuffix .so, $(LIBS)))
 
+LINK	=	$(addprefix ../lib/lib_arcade_, $(addsuffix .so, $(LIBS)))\
+			$(addprefix $(CURDIR)/ressources, $(LIBS))\
+			../ressources/libs
+
 CMDS		=	obj\
-				clean\
-				fclean\
-				re
+				clean
+
+DIRS		=	ressources
 
 all: links
 
+dirs: $(DIRS)
+
 links: $(LINKS)
 
-$(LINKS): $(LIBS)
-	$(foreach LIB, $(LIBS), ln -sf $(LIB)/lib_arcade_$(LIB).so ../lib/lib_arcade_$(LIB).so)
+libs: $(LIBS)
+
+$(DIRS):
+	$(foreach DIR, $(DIRS), mkdir -p $(DIR))
+
+$(LINKS): $(LIBS) $(DIRS)
+	$(foreach LIB, $(LIBS), ln -sf $(CURDIR)/$(LIB)/lib_arcade_$(LIB).so ../lib/lib_arcade_$(LIB).so;)
+	$(foreach LIB, $(LIBS), ln -sf $(CURDIR)/$(LIB)/ressources $(CURDIR)/ressources/$(LIB);)
+	ln -sf $(CURDIR)/ressources ../ressources/libs
 
 $(LIBS):
 	$(MAKE) -C $@
@@ -29,4 +42,10 @@ $(LIBS):
 $(CMDS):
 	$(foreach DIR, $(LIBS), $(MAKE) -C $(DIR) $@;)
 
-.PHONY: all links $(LIBS) $(CMDS)
+fclean:
+	rm -f $(LINKS)
+	$(foreach DIR, $(LIBS), $(MAKE) -C $(DIR) $@;)
+
+re:	fclean all
+
+.PHONY: all dirs links libs $(LIBS) $(CMDS) fclean re
