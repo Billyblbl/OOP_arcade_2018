@@ -7,7 +7,9 @@
 
 export CPPFLAGS +=	-I$(CURDIR)/include
 
-LIBS	=
+LIBS	= sfml
+
+LINKS	=	$(addprefix ../lib/lib_arcade_, $(addsuffix .so, $(LIBS)))
 
 CMDS		=	obj\
 				clean\
@@ -16,8 +18,10 @@ CMDS		=	obj\
 
 all: links
 
-links: $(LIBS)
-	$(foreach LIB, $(LIBS), ln -sf $(LIBS)/lib_arcade_$(LIB).so ../lib/lib_arcade_$(LIB).so)
+links: $(LINKS)
+
+$(LINKS): $(LIBS)
+	$(foreach LIB, $(LIBS), ln -sf $(LIB)/lib_arcade_$(LIB).so ../lib/lib_arcade_$(LIB).so)
 
 $(LIBS):
 	$(MAKE) -C $@
