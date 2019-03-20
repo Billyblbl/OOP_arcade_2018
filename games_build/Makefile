@@ -9,8 +9,8 @@ export CPPFLAGS +=	-I$(CURDIR)/include
 
 GAMES	=
 
-LINK	=	$(addprefix ../games/lib_arcade_, $(addsuffix .so, $(GAMES)))\
-			$(addprefix $(CURDIR)/ressources, $(GAMES))\
+LINKS	=	$(addprefix ../games/lib_arcade_, $(addsuffix .so, $(GAMES)))\
+			$(addprefix $(CURDIR)/ressources/, $(GAMES))\
 			../ressources/games
 
 CMDS		=	obj\
@@ -22,16 +22,17 @@ all: links
 
 dirs: $(DIRS)
 
-links: $(LINKS)
-
 games: $(GAMES)
 
 $(DIRS):
 	$(foreach DIR, $(DIRS), mkdir -p $(DIR))
 
-$(LINKS): $(GAMES) $(DIRS)
+links: $(GAMES) $(DIRS)
+	echo "Linking games libraries"
 	$(foreach LIB, $(GAMES), ln -sf $(CURDIR)/$(LIB)/lib_arcade_$(LIB).so ../games/lib_arcade_$(LIB).so;)
+	echo "Linking each game librairies ressources in central games lib ressources folder"
 	$(foreach LIB, $(GAMES), ln -sf $(CURDIR)/$(LIB)/ressources $(CURDIR)/ressources/$(LIB);)
+	echo "Linking game lib ressources folder to root ressources folder"
 	ln -sf $(CURDIR)/ressources ../ressources/games
 
 $(GAMES):
@@ -41,6 +42,7 @@ $(CMDS):
 	$(foreach DIR, $(GAMES), $(MAKE) -C $(DIR) $@;)
 
 fclean:
+	rm -rf $(DIRS)
 	rm -f $(LINKS)
 	$(foreach DIR, $(GAMES), $(MAKE) -C $(DIR) $@;)
 
