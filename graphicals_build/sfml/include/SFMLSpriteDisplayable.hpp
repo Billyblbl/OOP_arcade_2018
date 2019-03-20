@@ -5,8 +5,8 @@
 ** SFML Graphic implementation displayable object class
 */
 
-#ifndef SFMLDISPLAYABLE_HPP_
-    #define SFMLDISPLAYABLE_HPP_
+#ifndef SFMLSPRITEDISPLAYABLE_HPP_
+    #define SFMLSPRITEDISPLAYABLE_HPP_
 
 	#include <string>
 	#include <SFML/Graphics.hpp>
@@ -14,10 +14,10 @@
 	#include "Cache.hpp"
 	#include "Entity.hpp"
 
-class SFMLDisplayable : public sf::Sprite, public IDisplayable {
+class SFMLSpriteDisplayable : public sf::Sprite, public IDisplayable {
 	public:
-		SFMLDisplayable(const std::string &name);
-		~SFMLDisplayable() = default;
+		SFMLSpriteDisplayable(const std::string &name);
+		~SFMLSpriteDisplayable() = default;
 
 		class LoadableTexture : public sf::Texture {
 			public:
@@ -25,6 +25,11 @@ class SFMLDisplayable : public sf::Sprite, public IDisplayable {
 				if (!loadFromFile(path))
 					throw std::runtime_error("SFML texture load : " + path);
 			}
+		};
+
+		class SFMLSpriteError : std::runtime_error {
+			public:
+			SFMLSpriteError(const std::string &what): std::runtime_error(what){}
 		};
 
 		struct State {
@@ -53,7 +58,6 @@ class SFMLDisplayable : public sf::Sprite, public IDisplayable {
 		KeyList::iterator	_currentState;
 
 		static	Cache<LoadableTexture>	TextureCache;
-		static	Cache<Entity>			EntityCache;
 };
 
-#endif /* !SFMLDISPLAYABLE_HPP_ */
+#endif /* !SFMLSPRITEDISPLAYABLE_HPP_ */

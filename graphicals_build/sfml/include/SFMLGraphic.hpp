@@ -10,6 +10,8 @@
 
 	#include <SFML/Graphics.hpp>
 	#include "IGraphic.hpp"
+	#include "Cache.hpp"
+	#include "Entity.hpp"
 
 class SFMLGraphic : public IGraphic {
 	public:
@@ -23,6 +25,10 @@ class SFMLGraphic : public IGraphic {
     	void            clear() override;
     	IDisplayable    *createDisplayable(const std::string &name) override;
 
+		static const sf::Font	&getFont();
+
+		static	Cache<Entity>			EntityCache;
+
 	protected:
 	private:
 		sf::Vector2f		_cellDimensions;
@@ -30,12 +36,8 @@ class SFMLGraphic : public IGraphic {
 
 		sf::Vector2u		_windowDimensions;
 		sf::RenderWindow	_window;
-		sf::Font			_font;
+		static sf::Font		_font;
 
 };
-
-extern "C" {
-	SFMLGraphic	LibObject(1920, 1080);
-}
 
 #endif /* !SFMLGRAPHIC_HPP_ */

@@ -8,7 +8,8 @@
 LIB	=	lib_arcade_sfml.so
 
 SRC	=	./src/SFMLGraphic.cpp\
-		./src/SFMLDisplayable.cpp\
+		./src/SFMLSpriteDisplayable.cpp\
+		./src/SFMLTextDisplayable.cpp\
 		./src/Entity.cpp
 
 OBJ	=	$(SRC:.cpp=.o)

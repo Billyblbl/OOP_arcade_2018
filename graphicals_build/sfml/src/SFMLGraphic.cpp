@@ -6,7 +6,12 @@
 */
 
 #include "SFMLGraphic.hpp"
-#include "SFMLDisplayable.hpp"
+#include "SFMLSpriteDisplayable.hpp"
+#include "SFMLTextDisplayable.hpp"
+
+extern "C" {
+	SFMLGraphic	LibObject(1920, 1080);
+}
 
 SFMLGraphic::SFMLGraphic(unsigned width, unsigned height):
 	_windowDimensions(width, height),
@@ -18,9 +23,10 @@ SFMLGraphic::SFMLGraphic(unsigned width, unsigned height):
 
 void            SFMLGraphic::setEntity(float x, float y, IDisplayable &entity)
 {
-	SFMLDisplayable	&trueEntity = dynamic_cast<SFMLDisplayable &>(entity);
-	trueEntity.setPosition({x * _cellDimensions.x, y * _cellDimensions.y});
-	_window.draw(trueEntity);
+	sf::Drawable		&asDrawable = dynamic_cast<sf::Drawable &>(entity);
+	sf::Transformable	&asTransformable = dynamic_cast<sf::Transformable &>(entity);
+	asTransformable.setPosition({x * _cellDimensions.x, y * _cellDimensions.y});
+	_window.draw(asDrawable);
 }
 
 void            SFMLGraphic::write(int x, int y, const std::string &text)
@@ -52,5 +58,14 @@ void            SFMLGraphic::clear()
 
 IDisplayable    *SFMLGraphic::createDisplayable(const std::string &name)
 {
-	return new SFMLDisplayable(name);
+	try {
+		return new SFMLSpriteDisplayable(name);
+	} catch(const SFMLSpriteDisplayable::SFMLSpriteError& e) {
+		return new SFMLTextDisplayable(name);
+	}
+}
+
+const sf::Font	&SFMLGraphic::getFont()
+{
+	return _font;
 }

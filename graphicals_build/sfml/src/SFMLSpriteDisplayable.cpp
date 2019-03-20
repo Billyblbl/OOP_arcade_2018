@@ -5,23 +5,25 @@
 ** SFML Graphic implementation displayable object methods
 */
 
-#include "SFMLDisplayable.hpp"
+#include "SFMLSpriteDisplayable.hpp"
+#include "SFMLGraphic.hpp"
 
-//temporary loader, only looks for sprites, no .entity file
-SFMLDisplayable::SFMLDisplayable(const std::string &name):
+SFMLSpriteDisplayable::SFMLSpriteDisplayable(const std::string &name):
 	_name(name)
 {
-	Entity		&entity = EntityCache.get(name);
+	Entity		&entity = SFMLGraphic::EntityCache.get(name);
+	if (entity.getSpritePath() == "undefined")
+		throw SFMLSpriteError("Can't build Sprite Displayable without a texture");
 	for (auto &state : entity) {
 		_keys.emplace_back(state.name);
 		_states.emplace(state.name, state);
 	}
-	_currentState = _keys.begin();
 	sf::Texture	&texture = TextureCache.get(entity.getSpritePath());
 	setTexture(texture);
+	setState(0);
 }
 
-SFMLDisplayable::State::State(const Entity::State &data):
+SFMLSpriteDisplayable::State::State(const Entity::State &data):
 	name(data.name),
 	rect(data.upLeft.x,
 		 data.upLeft.y,
@@ -29,26 +31,26 @@ SFMLDisplayable::State::State(const Entity::State &data):
 		 data.downRight.y - data.upLeft.y)
 {}
 
-void			SFMLDisplayable::setState(const std::string &stateName)
+void			SFMLSpriteDisplayable::setState(const std::string &stateName)
 {
 	State	&state = _states.at(stateName);
 	_currentState = std::find(_keys.begin(), _keys.end(), stateName);
 	setTextureRect(state.rect);
 }
 
-void			SFMLDisplayable::setState(std::size_t stateId)
+void			SFMLSpriteDisplayable::setState(std::size_t stateId)
 {
 	State	&state = _states.at(_keys[stateId]);
 	_currentState = _keys.begin() + static_cast<long int>(stateId);
 	setTextureRect(state.rect);
 }
 
-const std::string	&SFMLDisplayable::getState() const
+const std::string	&SFMLSpriteDisplayable::getState() const
 {
 	return *_currentState;
 }
 
-IDisplayable		&SFMLDisplayable::operator++()
+IDisplayable		&SFMLSpriteDisplayable::operator++()
 {
 	_currentState++;
 	if (_currentState == _keys.end())
@@ -58,7 +60,7 @@ IDisplayable		&SFMLDisplayable::operator++()
 	return *this;
 }
 
-IDisplayable		&SFMLDisplayable::operator--()
+IDisplayable		&SFMLSpriteDisplayable::operator--()
 {
 	if (_currentState == _keys.begin())
 		_currentState = _keys.end() - 1;
