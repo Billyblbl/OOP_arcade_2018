@@ -22,7 +22,7 @@ all:	$(LIB)
 obj:	$(OBJ)
 
 $(LIB): obj
-	$(CXX) -shared -o $(LIB) $(LDFLAGS) $(OBJ)
+	$(CXX) -shared -o $(LIB) $(OBJ) $(LDFLAGS)
 
 clean:
 	rm -f $(OBJ)
