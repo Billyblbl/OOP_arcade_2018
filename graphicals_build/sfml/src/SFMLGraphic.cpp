@@ -13,6 +13,8 @@ extern "C" {
 	SFMLGraphic	LibObject(1920, 1080);
 }
 
+sf::Font		SFMLGraphic::_font;
+
 SFMLGraphic::SFMLGraphic(unsigned width, unsigned height):
 	_windowDimensions(width, height),
 	_window(sf::VideoMode(width, height), "Arcade")
