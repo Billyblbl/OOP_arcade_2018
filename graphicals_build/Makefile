@@ -9,15 +9,31 @@ export CPPFLAGS +=	-I$(CURDIR)/include
 
 LIBS	=
 
+LINKS	=	$(addprefix ../lib/lib_arcade_, $(addsuffix .so, $(LIBS))) \
+			$(addprefix $(CURDIR)/ressources/, $(LIBS)) \
+			../ressources/libs
+
 CMDS		=	obj\
-				clean\
-				fclean\
-				re
+				clean
+
+DIRS		=	ressources
 
 all: links
 
-links: $(LIBS)
-	$(foreach LIB, $(LIBS), ln -sf $(LIBS)/lib_arcade_$(LIB).so ../lib/lib_arcade_$(LIB).so)
+dirs: $(DIRS)
+
+libs: $(LIBS)
+
+$(DIRS):
+	$(foreach DIR, $(DIRS), mkdir -p $(DIR))
+
+links: $(LIBS) $(DIRS)
+	echo "Linking graphical libraries"
+	$(foreach LIB, $(LIBS), ln -sf $(CURDIR)/$(LIB)/lib_arcade_$(LIB).so ../lib/lib_arcade_$(LIB).so;)
+	echo "Linking each graphical librairies ressources in central graphical lib ressources folder"
+	$(foreach LIB, $(LIBS), ln -sf $(CURDIR)/$(LIB)/ressources $(CURDIR)/ressources/$(LIB);)
+	echo "Linking graphical lib ressources folder to root ressources folder"
+	ln -sf $(CURDIR)/ressources ../ressources/libs
 
 $(LIBS):
 	$(MAKE) -C $@
@@ -25,4 +41,11 @@ $(LIBS):
 $(CMDS):
 	$(foreach DIR, $(LIBS), $(MAKE) -C $(DIR) $@;)
 
-.PHONY: all links $(LIBS) $(CMDS)
+fclean:
+	rm -rf $(DIRS)
+	rm -f $(LINKS)
+	$(foreach DIR, $(LIBS), $(MAKE) -C $(DIR) $@;)
+
+re:	fclean all
+
+.PHONY: all dirs links libs $(LIBS) $(CMDS) fclean re

@@ -29,19 +29,30 @@ SUBSYSTEM	=	core\
 				graphicals
 
 CMDS		=	obj\
-				clean\
-				fclean\
-				re
+				clean
+
+DIRS		=	./lib/\
+				./games/\
+				./ressources/
 
 all: $(SUBSYSTEM)
 
 debug: export CPPFLAGS += -g3
 debug: re
 
-$(SUBSYSTEM):
+$(DIRS):
+	$(foreach DIR, $(DIRS), mkdir -p $(DIR);)
+
+$(SUBSYSTEM): $(DIRS)
 	$(MAKE) -C $@_build
 
 $(CMDS):
 	$(foreach DIR, $(SUBSYSTEM), $(MAKE) -C $(DIR)_build $@;)
 
-.PHONY: all $(SUBSYSTEM) $(CMDS)
+fclean: clean
+	$(foreach DIR, $(SUBSYSTEM), $(MAKE) -C $(DIR)_build $@;)
+	rm -rf $(DIRS)
+
+re: fclean all
+
+.PHONY: all $(SUBSYSTEM) $(CMDS) fclean re
