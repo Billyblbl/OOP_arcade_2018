@@ -16,12 +16,12 @@ class SFMLGraphic : public IGraphic {
 		SFMLGraphic(unsigned width, unsigned height);
 		~SFMLGraphic() = default;
 
-    	void            setEntity(float x, float y, IDisplayable &entity);
-    	void            write(int x, int y, const std::string &text);
-    	void            setSize(int x, int y);
-    	void            update();
-    	void            clear();
-    	IDisplayable    *createDisplayable(const std::string &name);
+    	void            setEntity(float x, float y, IDisplayable &entity) override;
+    	void            write(int x, int y, const std::string &text) override;
+    	void            setSize(int x, int y) override;
+    	void            update() override;
+    	void            clear() override;
+    	IDisplayable    *createDisplayable(const std::string &name) override;
 
 	protected:
 	private:

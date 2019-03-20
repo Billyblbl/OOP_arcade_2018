@@ -12,11 +12,12 @@
 	#include <SFML/Graphics.hpp>
 	#include "IDisplayable.hpp"
 	#include "Cache.hpp"
+	#include "Entity.hpp"
 
 class SFMLDisplayable : public sf::Sprite, public IDisplayable {
 	public:
 		SFMLDisplayable(const std::string &name);
-		~SFMLDisplayable();
+		~SFMLDisplayable() = default;
 
 		class LoadableTexture : public sf::Texture {
 			public:
@@ -26,13 +27,33 @@ class SFMLDisplayable : public sf::Sprite, public IDisplayable {
 			}
 		};
 
+		struct State {
+			public:
+			State(const Entity::State &data);
+
+			const std::string	name;
+			sf::IntRect			rect;
+		};
+
+		void				setState(const std::string &stateName) override;
+		void				setState(std::size_t stateId) override;
+		const std::string	&getState() const override;
+
+		IDisplayable		&operator++() override;
+		IDisplayable		&operator--() override;
+
+		typedef std::vector<std::string>				KeyList;
+		typedef	std::unordered_map<std::string, State>	StateMap;
+
 	protected:
 	private:
-		std::string	_name;
-		std::string	_texturePath;
-
+		std::string			_name;
+		KeyList				_keys;
+		StateMap			_states;
+		KeyList::iterator	_currentState;
 
 		static	Cache<LoadableTexture>	TextureCache;
+		static	Cache<Entity>			EntityCache;
 };
 
 #endif /* !SFMLDISPLAYABLE_HPP_ */

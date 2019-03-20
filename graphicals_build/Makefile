@@ -12,7 +12,7 @@ LIBS	= sfml
 LINKS	=	$(addprefix ../lib/lib_arcade_, $(addsuffix .so, $(LIBS)))
 
 LINK	=	$(addprefix ../lib/lib_arcade_, $(addsuffix .so, $(LIBS)))\
-			$(addprefix $(CURDIR)/ressources, $(LIBS))\
+			$(addprefix $(CURDIR)/ressources/, $(LIBS))\
 			../ressources/libs
 
 CMDS		=	obj\
@@ -33,7 +33,7 @@ $(DIRS):
 
 $(LINKS): $(LIBS) $(DIRS)
 	$(foreach LIB, $(LIBS), ln -sf $(CURDIR)/$(LIB)/lib_arcade_$(LIB).so ../lib/lib_arcade_$(LIB).so;)
-	$(foreach LIB, $(LIBS), ln -sf $(CURDIR)/$(LIB)/ressources $(CURDIR)/ressources/$(LIB);)
+	$(foreach LIB, $(LIBS), ln -sfn $(CURDIR)/$(LIB)/ressources $(CURDIR)/ressources/$(LIB);)
 	ln -sf $(CURDIR)/ressources ../ressources/libs
 
 $(LIBS):
@@ -43,6 +43,7 @@ $(CMDS):
 	$(foreach DIR, $(LIBS), $(MAKE) -C $(DIR) $@;)
 
 fclean:
+	rm -rf $(DIRS)
 	rm -f $(LINKS)
 	$(foreach DIR, $(LIBS), $(MAKE) -C $(DIR) $@;)
 
