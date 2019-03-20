@@ -13,6 +13,8 @@ Entity::Entity(const std::string &path):
 	_spritePath("")
 {
 	std::ifstream	file(path);
+	if (!file.is_open())
+		throw std::runtime_error(std::string(__func__) + "Can't open entity file : " + path);
 	std::string		buf;
 	while (std::getline(file, buf, '\n')) {
 		if (buf.length() == 0 || buf[0] == '#')
