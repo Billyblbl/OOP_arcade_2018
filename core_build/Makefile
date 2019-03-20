@@ -5,9 +5,11 @@
 ## core makefile
 ##
 
-BIN =	arcade
+BIN		=	arcade
 
-LINK =	../$(BIN)
+LINK	=	../$(BIN)
+
+RESS	=	../ressources/core
 
 SRC	=	src/Core.cpp\
 		src/Control.cpp\
@@ -33,8 +35,11 @@ obj:	$(OBJ)
 $(BIN):	obj
 	$(CXX) -o $(BIN) $(OBJ) $(LDFLAGS)
 
-$(LINK): $(BIN)
+$(LINK): $(BIN) $(RESS)
 	ln -sf $(CURDIR)/$(BIN) $(LINK)
+
+$(RESS):
+	ln -sf $(CURDIR)/ressources $(RESS)
 
 clean:
 	rm -f $(OBJ)
