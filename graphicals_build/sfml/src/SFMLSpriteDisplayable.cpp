@@ -8,6 +8,8 @@
 #include "SFMLSpriteDisplayable.hpp"
 #include "SFMLGraphic.hpp"
 
+Cache<SFMLSpriteDisplayable::LoadableTexture>	SFMLSpriteDisplayable::TextureCache;
+
 SFMLSpriteDisplayable::SFMLSpriteDisplayable(const std::string &name):
 	_name(name)
 {

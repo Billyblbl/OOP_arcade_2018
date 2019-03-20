@@ -14,6 +14,7 @@ extern "C" {
 }
 
 sf::Font		SFMLGraphic::_font;
+Cache<Entity>	SFMLGraphic::EntityCache;
 
 SFMLGraphic::SFMLGraphic(unsigned width, unsigned height):
 	_windowDimensions(width, height),
