@@ -7,3 +7,6 @@
 **/*tests/*
 **/arcade
 **/*.pdf
+/games
+/lib
+/ressources
