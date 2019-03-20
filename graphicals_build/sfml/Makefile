@@ -15,6 +15,7 @@ SRC	=	./src/SFMLGraphic.cpp\
 OBJ	=	$(SRC:.cpp=.o)
 
 CPPFLAGS	+=	-I./include -fPIC
+LDFLAGS		+=	-lsfml-graphics
 
 all:	$(LIB)
 
