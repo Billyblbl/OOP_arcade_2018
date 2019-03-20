@@ -41,9 +41,9 @@ void	MainMenu::setGraphic(IGraphic &handler)
 	_screen = &handler;
 	_screen->setSize(100, 100);
 	_screen->clear();
-	_gameCursor.reset(_screen->createDisplayable("menu.cursor"));
-	_glibCursor.reset(_screen->createDisplayable("menu.cursor"));
-	_emptyEntity.reset(_screen->createDisplayable("global.empty"));
+	_gameCursor.reset(_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"));
+	_glibCursor.reset(_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"));
+	_emptyEntity.reset(_screen->createDisplayable("./ressources/core/entities/menu.empty.entity"));
 	refresh();
 }
 
