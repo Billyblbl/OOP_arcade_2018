@@ -9,9 +9,8 @@ export CPPFLAGS +=	-I$(CURDIR)/include
 
 LIBS	= sfml
 
-LINKS	=	$(addprefix ../lib/lib_arcade_, $(addsuffix .so, $(LIBS)))
-
-			$(addprefix $(CURDIR)/ressources/, $(LIBS))\
+LINKS	=	$(addprefix ../lib/lib_arcade_, $(addsuffix .so, $(LIBS))) \
+			$(addprefix $(CURDIR)/ressources/, $(LIBS)) \
 			../ressources/libs
 
 CMDS		=	obj\
