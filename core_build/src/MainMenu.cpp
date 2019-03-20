@@ -8,8 +8,8 @@
 #include "MainMenu.hpp"
 
 MainMenu::MainMenu():
-	_gameList("./games", "lib_arcade_", ".so"),
-	_glibList("./lib", "lib_arcade_", ".so"),
+	_gameList("./games", "./games/lib_arcade_", ".so"),
+	_glibList("./lib", "./lib/lib_arcade_", ".so"),
 	_gameCursor(_gameList.begin(), nullptr, Position2F({0.0f, 0.0f})),
 	_glibCursor(_glibList.begin(), nullptr, Position2F({50.0f, 0.0f})),
 	_screen(nullptr)
