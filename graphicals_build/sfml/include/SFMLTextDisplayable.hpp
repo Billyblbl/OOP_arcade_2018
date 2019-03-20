@@ -16,7 +16,7 @@
 class SFMLTextDisplayable : public sf::Text, public IDisplayable {
 	public:
 		SFMLTextDisplayable(const std::string &name);
-		~SFMLTextDisplayable();
+		~SFMLTextDisplayable() = default;
 
 		struct State {
 			public:
