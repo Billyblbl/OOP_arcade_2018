@@ -24,10 +24,14 @@ class SFMLGraphic : public IGraphic {
     	void            update() override;
     	void            clear() override;
     	IDisplayable    *createDisplayable(const std::string &name) override;
+		bool			hasInput() override;
+		int32_t			getInput() override;
 
 		static const sf::Font	&getFont();
 
 		static	Cache<Entity>			EntityCache;
+
+		typedef	std::unordered_map<sf::Keyboard::Key, int32_t>	Translations;
 
 	protected:
 	private:
@@ -37,6 +41,12 @@ class SFMLGraphic : public IGraphic {
 		sf::Vector2u		_windowDimensions;
 		sf::RenderWindow	_window;
 		static sf::Font		_font;
+
+		sf::Keyboard::Key	_input;
+		bool				_majInput;
+
+		static const Translations	Translator;
+		static const Translations	MajTranslator;
 
 };
 
