@@ -45,8 +45,6 @@ class Core {
 		IGame		&getCurrentGame();
 		GameHandler	&getCurrentHandler();
 		IGraphic	&getScreen();
-		bool		keyPressed() const;
-		int32_t		getKeyStroke();
 
 		GHandlerPtr				_screen;
 		GameVector              _games;
