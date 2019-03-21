@@ -8,6 +8,7 @@
 #ifndef SFMLGRAPHIC_HPP_
     #define SFMLGRAPHIC_HPP_
 
+	#include <queue>
 	#include <SFML/Graphics.hpp>
 	#include "IGraphic.hpp"
 	#include "Cache.hpp"
@@ -32,6 +33,8 @@ class SFMLGraphic : public IGraphic {
 		static	Cache<Entity>			EntityCache;
 
 		typedef	std::unordered_map<sf::Keyboard::Key, int32_t>	Translations;
+		typedef std::queue<sf::Drawable *>						RenderQueue;
+		typedef	std::vector<sf::Text>							TextList;
 
 	protected:
 	private:
@@ -41,6 +44,9 @@ class SFMLGraphic : public IGraphic {
 		sf::Vector2u		_windowDimensions;
 		sf::RenderWindow	_window;
 		static sf::Font		_font;
+
+		RenderQueue			_toDraw;
+		TextList			_texts;
 
 		sf::Keyboard::Key	_input;
 		bool				_majInput;
