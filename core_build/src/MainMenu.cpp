@@ -25,6 +25,12 @@ MainMenu::MainMenu():
 
 bool	MainMenu::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime)
 {
+	for (unsigned short i = 0; i < _gameList.length() && i <= 50; i++)
+		_screen->write(1, i, _gameList[i].name);
+	for (unsigned short i = 0; i < _glibList.length() && i <= 50; i++)
+		_screen->write(1, i, _glibList[i].name);
+	_screen->setEntity(_gameCursor.getPos().x, _gameCursor.getPos().y, _gameCursor);
+	_screen->setEntity(_glibCursor.getPos().x, _glibCursor.getPos().y, _glibCursor);
 	return true;
 	(void)deltaT;
 	(void)upTime;
@@ -56,13 +62,6 @@ void	MainMenu::refresh()
 	_glibCursor = _glibList.begin();
 	_gameCursor.setPos({0.0, 0.0});
 	_glibCursor.setPos({50.0, 0.0});
-	_screen->clear();
-	for (unsigned short i = 0; i < _gameList.length() && i <= 50; i++)
-		_screen->write(1, i, _gameList[i].name);
-	for (unsigned short i = 0; i < _glibList.length() && i <= 50; i++)
-		_screen->write(1, i, _glibList[i].name);
-	_screen->setEntity(0.0, 0.0, _gameCursor);
-	_screen->setEntity(50.0, 0.0, _glibCursor);
 	// std::cout << __func__ << std::endl;
 }
 
