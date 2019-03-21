@@ -72,6 +72,8 @@ Core::GameHandler		&Core::getCurrentHandler()
 
 IGame					&Core::getCurrentGame()
 {
+	if (_games.size() == 0)
+		return _mainMenu;
 	return _currentGame->operator IGame &();
 }
 
