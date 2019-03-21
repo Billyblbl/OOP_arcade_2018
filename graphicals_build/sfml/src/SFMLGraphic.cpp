@@ -90,21 +90,26 @@ SFMLGraphic::SFMLGraphic(unsigned width, unsigned height):
 	_windowDimensions(width, height),
 	_window(sf::VideoMode(width, height), "Arcade")
 {
-	if (!_font.loadFromFile("ressources/libs/sfml/fonts/arial.ttf"))
-		throw std::runtime_error("SFML font loading failure : ressources/libs/sfml/fonts/arial.ttf");
+	if (!_font.loadFromFile("ressources/libs/sfml/fonts/films.Dynasty.ttf"))
+		throw std::runtime_error("SFML font loading failure : ressources/libs/sfml/fonts/films.Dynasty.ttf");
 }
 
 void            SFMLGraphic::setEntity(float x, float y, IDisplayable &entity)
 {
 	sf::Drawable		&asDrawable = dynamic_cast<sf::Drawable &>(entity);
 	sf::Transformable	&asTransformable = dynamic_cast<sf::Transformable &>(entity);
+	// std::cout << "cell diemension : " << _cellDimensions.x << "," << _cellDimensions.y << std::endl;
+	asTransformable.setScale({_cellDimensions.x, _cellDimensions.y});
 	asTransformable.setPosition({x * _cellDimensions.x, y * _cellDimensions.y});
+	// asTransformable.setPosition(0.0, 0.0);
 	_window.draw(asDrawable);
+	// (void)asDrawable;
 }
 
 void            SFMLGraphic::write(int x, int y, const std::string &text)
 {
 	sf::Text	textEntity(text, _font);
+	textEntity.setFillColor(sf::Color::White);
 	textEntity.setScale({_cellDimensions.x, _cellDimensions.y * text.length()});
 	textEntity.setPosition({x * _cellDimensions.x, y * _cellDimensions.y});
 	_window.draw(textEntity);
@@ -112,6 +117,7 @@ void            SFMLGraphic::write(int x, int y, const std::string &text)
 
 void            SFMLGraphic::setSize(int x, int y)
 {
+	// std::cout << __func__ << "x=" << x << ",y=" << y << std::endl;
 	unsigned	ux = static_cast<unsigned>(x);
 	unsigned	uy = static_cast<unsigned>(y);
 	_cellDimensions = {static_cast<float>(_windowDimensions.x / ux),
@@ -121,12 +127,32 @@ void            SFMLGraphic::setSize(int x, int y)
 
 void            SFMLGraphic::update()
 {
+	// std::cout << __func__ << std::endl;
+	// sf::Event ev;
+	// while (_window.pollEvent(ev)) {
+	// 	if (ev.type == sf::Event::Closed)
+    //     	_window.close();
+	// }
+	// sf::Text	text("zbeb", _font, 100);
+	_window.clear(sf::Color::Blue);
+	// text.setFillColor(sf::Color::Red);
+	// text.setScale(10.0, 10.0);
+	// text.setStyle(sf::Text::Underlined | sf::Text::Bold);
+	// _window.draw(text);
 	_window.display();
 }
 
 void            SFMLGraphic::clear()
 {
 	_window.clear();
+	// sf::Text	text("zbeb", _font, 100);
+	// text.setFillColor(sf::Color::Red);
+	// text.setStyle(sf::Text::Underlined | sf::Text::Bold);
+	// text.setPosition(50.0, 50.0);
+	// _window.draw(text);
+	// sf::CircleShape	circle(100.f);
+	// circle.setFillColor(sf::Color::Red);
+	// _window.draw(circle);
 }
 
 IDisplayable    *SFMLGraphic::createDisplayable(const std::string &name)

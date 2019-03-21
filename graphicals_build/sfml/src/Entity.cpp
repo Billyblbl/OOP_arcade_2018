@@ -28,11 +28,12 @@ Entity::Entity(const std::string &path):
 
 Entity::CoordinatesI::CoordinatesI(const std::string &format)
 {
-	if (format[0] != '[' || format[format.size() - 1] != ']')
+	if (format[0] != '[' || format[format.length() - 1] != ']')
 		throw std::runtime_error(std::string(__func__) + " parse error : " + format);
-	std::size_t	coma = format.find(',');
-	std::string	xString = format.substr(1, coma);
-	std::string	yString = format.substr(coma + 1, format.size() - 2);
+	std::string coord(format.substr(1, format.size() - 2));
+	std::size_t	coma = coord.find(',');
+	std::string	xString(coord.substr(0, coma));
+	std::string	yString(coord.substr(coma + 1));
 	x = std::atoi(xString.c_str());
 	y = std::atoi(yString.c_str());
 	if ((x == 0 && xString != "0") || (y == 0 && yString != "0"))
