@@ -16,7 +16,9 @@ Core::Core(const std::string &path):
 	_screen(new GraphicHandler(path)),
 	_games({}),
 	_currentGame(_games.begin()),
-	_mainMenu(getScreen())
+	_mainMenu(getScreen(),
+			  [this](const std::string &gamePath){this->addGame(gamePath);},
+			  [this](const std::string &glibPath){this->setGraphic(glibPath);})
 {}
 
 void	Core::addGame(const std::string &path)

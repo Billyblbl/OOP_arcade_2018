@@ -51,9 +51,6 @@ class Core {
 		GameVector::iterator    _currentGame;
 		MainMenu				_mainMenu;
 
-		//term data
-
-		struct termios			_oldSettings;
 };
 
 #endif /* !ARCADE_HPP_ */

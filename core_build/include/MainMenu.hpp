@@ -15,7 +15,9 @@
 class MainMenu : public IGame {
 	public:
 
-		MainMenu(IGraphic &handler);
+		typedef std::function<void (const std::string &path)>	Selector;
+
+		MainMenu(IGraphic &handler, Selector gameSelector, Selector glibSelector);
 		~MainMenu() = default;
 
 		typedef	std::unique_ptr<IDisplayable>	DisplayablePtr;
@@ -25,12 +27,10 @@ class MainMenu : public IGame {
 			float	y;
 		};
 
-		//kinda looks like an union in some sense
-		//might be a good idea to explore, to avoid unnecessary code
 		class Cursor {
 			public:
 
-			Cursor(DirectoryMenu &directory, IDisplayable *entity, Position2F position);
+			Cursor(DirectoryMenu &directory, IDisplayable *entity, Position2F position, Selector sel);
 
 			//act as iterator
 			Cursor	&operator++();
@@ -63,6 +63,7 @@ class MainMenu : public IGame {
 			Position2F				_position;
 			const Position2F		_initPosition;
 			bool					_selected;
+			Selector				_sel;
 
 		};
 

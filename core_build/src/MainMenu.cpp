@@ -7,16 +7,18 @@
 
 #include "MainMenu.hpp"
 
-MainMenu::MainMenu(IGraphic &handler):
+MainMenu::MainMenu(IGraphic &handler, MainMenu::Selector gameSelector, MainMenu::Selector glibSelector):
 	_gameList("./games", "./games/lib_arcade_", ".so"),
 	_glibList("./lib", "./lib/lib_arcade_", ".so"),
 	_screen(&handler),
 	_gameCursor(_gameList,
 				_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"),
-				Position2F({0.0f, 0.0f})),
+				Position2F({0.0f, 0.0f}),
+				gameSelector),
 	_glibCursor(_glibList,
 				_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"),
-				Position2F({50.0f, 0.0f}))
+				Position2F({50.0f, 0.0f}),
+				glibSelector)
 {
 	_screen->setSize(100, 100);
 	_keyBinds[KeyCode::arrowUp] = [this](){--this->_gameCursor;};

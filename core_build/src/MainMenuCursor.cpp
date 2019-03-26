@@ -9,13 +9,15 @@
 
 MainMenu::Cursor::Cursor(DirectoryMenu &directory,
 						 IDisplayable *entity,
-						 MainMenu::Position2F position):
+						 MainMenu::Position2F position,
+						 Selector sel):
 	_directory(&directory),
 	_iterator(_directory->begin()),
 	_entity(entity),
 	_position(position),
 	_initPosition(position),
-	_selected(false)
+	_selected(false),
+	_sel(sel)
 {}
 
 //act as iterator (but wrapping around)
@@ -117,8 +119,9 @@ bool					MainMenu::Cursor::isSelected() const
 void					MainMenu::Cursor::select(bool on)
 {
 	_selected = on;
-	if (on)
+	if (on) {
 		_entity->setState("selected");
-	else
+		_sel(_iterator->path);
+	} else
 		_entity->setState("untouched");
 }
