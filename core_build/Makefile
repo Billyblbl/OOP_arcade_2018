@@ -5,15 +5,24 @@
 ## core makefile
 ##
 
-BIN =	arcade
+BIN		=	arcade
 
-LINK =	../$(BIN)
+LINK	=	../$(BIN)
 
-SRC	=	src/main.cpp
+RESS	=	../ressources/core
+
+SRC	=	src/Core.cpp\
+		src/DirectoryMenu.cpp\
+		src/MenuEntry.cpp\
+		src/MainMenu.cpp\
+		src/MainMenuCursor.cpp\
+		src/main.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
 
 CPPFLAGS	+=	-I./include
+
+LDFLAGS		+=	-ldl -lstdc++fs
 
 all:	link
 
@@ -22,10 +31,13 @@ link:	$(LINK)
 obj:	$(OBJ)
 
 $(BIN):	obj
-	$(CXX) -o $(BIN) $(LDFLAGS) $(OBJ)
+	$(CXX) -o $(BIN) $(OBJ) $(LDFLAGS)
 
-$(LINK): $(BIN)
+$(LINK): $(BIN) $(RESS)
 	ln -sf $(CURDIR)/$(BIN) $(LINK)
+
+$(RESS):
+	ln -sf $(CURDIR)/ressources $(RESS)
 
 clean:
 	rm -f $(OBJ)
