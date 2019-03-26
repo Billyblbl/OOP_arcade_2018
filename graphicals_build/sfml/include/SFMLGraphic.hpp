@@ -12,7 +12,6 @@
 	#include <SFML/Graphics.hpp>
 	#include "IGraphic.hpp"
 	#include "Cache.hpp"
-	#include "Entity.hpp"
 
 class SFMLGraphic : public IGraphic {
 	public:

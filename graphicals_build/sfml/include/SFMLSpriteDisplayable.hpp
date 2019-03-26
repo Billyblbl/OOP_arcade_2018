@@ -17,9 +17,15 @@
 
 struct SFMLSpriteData {
 	public:
-	SFMLSpriteData(const Entity::State &data);
-	const std::string	name;
-	sf::IntRect			rect;
+		SFMLSpriteData(const std::string &dataName,
+					   Vector2<int> &dataUpLeft,
+					   Vector2<int> &dataDownRight,
+					   Color dataColor,
+					   Color dataBackColor,
+					   char dataAscii);
+
+		const std::string	name;
+		sf::IntRect			rect;
 };
 
 class SFMLSpriteDisplayable : public Anima<SFMLSpriteData>, public SFMLArcadeEntity {

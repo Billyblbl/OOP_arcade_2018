@@ -11,28 +11,31 @@
 	#include <string>
 	#include <unordered_map>
 	#include <vector>
+	#include <fstream>
+	#include <sstream>
 	#include "IDisplayable.hpp"
-	#include "Entity.hpp"
+	#include "Types.hpp"
 
 template<class State>
 class Anima : public IDisplayable {
 	public:
 
-		Anima(const std::string &path):
-			_path(path)
-		{
-			Entity	&entity = Entity::ArcadeCache.get(path);
-			_spritePath = entity.getSpritePath();
-			for (auto &state : entity) {
-				_keys.emplace_back(state.name);
-				_states.emplace(state.name, state);
-			}
-		}
+		Anima(const std::string &path);
+		virtual ~Anima() = default;
 
-		virtual ~Anima()
-		{
-			Entity::ArcadeCache.letGo(_path);
-		}
+		class StateData {
+			public:
+			StateData() = default;
+			StateData(const std::string &format);
+			operator State();
+
+			std::string		name;
+			Vector2<int>	upLeft;
+			Vector2<int>	downRight;
+			Color			color;
+			Color			backColor;
+			char			ascii;
+		};
 
 		void				setState(const std::string &stateName) override final;
 		void				setState(std::size_t stateId) override final;
@@ -46,7 +49,7 @@ class Anima : public IDisplayable {
 		typedef	std::unordered_map<std::string, State>	StateMap;
 
 	protected:
-		virtual void		onStateChange(const State &newState);
+		virtual void		onStateChange(const State &newState) = 0;
 		std::string			_spritePath;
 	private:
 
@@ -57,6 +60,55 @@ class Anima : public IDisplayable {
 		typename StateMap::iterator	_currentState;
 
 };
+
+template<class State>
+Anima<State>::Anima(const std::string &path):
+	_spritePath(""),
+	_path(path)
+{
+	std::vector<StateData>	states;
+	std::ifstream	file(path);
+	if (!file.is_open())
+		throw std::runtime_error(std::string(__func__) + "Can't open entity file : " + path);
+	std::string		buf;
+	while (std::getline(file, buf, '\n')) {
+		if (buf.length() == 0 || buf[0] == '#')
+			continue;
+		if (_spritePath.size() == 0)
+			_spritePath = buf;
+		else {
+			StateData	data(buf);
+			_keys.emplace_back(data.name);
+			_states.insert(std::make_pair(data.name, data));
+		}
+	}
+}
+
+template<class State>
+Anima<State>::StateData::StateData(const std::string &format)
+{
+	std::stringstream			stream(format);
+	std::string					buf;
+	std::vector<std::string>	split;
+	while(std::getline(stream, buf, ':'))
+		split.emplace_back(buf);
+	if (split.size() != 6)
+		throw std::runtime_error(std::string(__func__) + " parse error : " + format);
+	name = split[0];
+	upLeft = split[1];
+	downRight = split[2];
+	color.value = static_cast<unsigned>(std::stoul(split[3], nullptr, 16));
+	backColor.value = static_cast<unsigned>(std::stoul(split[4], nullptr, 16));
+	ascii = split[5][0];
+}
+
+
+template<class State>
+Anima<State>::StateData::operator State()
+{
+	return State(name, upLeft, downRight, color, backColor, ascii);
+}
+
 
 template<class State>
 void	Anima<State>::setState(const std::string &stateName)
@@ -99,12 +151,6 @@ IDisplayable	&Anima<State>::operator--()
 	_currentState = _states.find(*_currentStateName);
 	onStateChange(_currentState->second);
 	return *this;
-}
-
-template<class State>
-void			Anima<State>::onStateChange(const State &newState)
-{
-	(void)newState;
 }
 
 #endif /* !ANIMA_HPP_ */

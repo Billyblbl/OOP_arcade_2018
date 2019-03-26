@@ -8,11 +8,20 @@
 #include "SFMLTextDisplayable.hpp"
 #include "SFMLGraphic.hpp"
 
-SFMLAsciiData::SFMLAsciiData(const Entity::State &data):
-	name(data.name),
-	asciiImg(data.ascii),
-	color(sf::Color(data.color.value))
-{}
+SFMLAsciiData::SFMLAsciiData(const std::string &dataName,
+							 Vector2<int> &dataUpLeft,
+							 Vector2<int> &dataDownRight,
+							 Color dataColor,
+							 Color dataBackColor,
+							 char dataAscii):
+	name(dataName),
+	asciiImg(dataAscii),
+	color(sf::Color(dataColor.value))
+{
+	(void)dataUpLeft;
+	(void)dataDownRight;
+	(void)dataBackColor;
+}
 
 SFMLTextDisplayable::SFMLTextDisplayable(const std::string &name):
 	Anima<SFMLAsciiData>(name),

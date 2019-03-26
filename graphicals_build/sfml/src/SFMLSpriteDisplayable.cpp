@@ -10,13 +10,22 @@
 
 Cache<SFMLSpriteDisplayable::LoadableTexture>	SFMLSpriteDisplayable::TextureCache;
 
-SFMLSpriteData::SFMLSpriteData(const Entity::State &data):
-	name(data.name),
-	rect(data.upLeft.x,
-		 data.upLeft.y,
-		 data.downRight.x - data.upLeft.x,
-		 data.downRight.y - data.upLeft.y)
-{}
+SFMLSpriteData::SFMLSpriteData(const std::string &dataName,
+							   Vector2<int> &dataUpLeft,
+							   Vector2<int> &dataDownRight,
+							   Color dataColor,
+							   Color dataBackColor,
+							   char dataAscii):
+	name(dataName),
+	rect(dataUpLeft.x,
+		 dataUpLeft.y,
+		 dataDownRight.x - dataUpLeft.x,
+		 dataDownRight.y - dataUpLeft.y)
+{
+	(void)dataColor;
+	(void)dataBackColor;
+	(void)dataAscii;
+}
 
 SFMLSpriteDisplayable::SFMLSpriteDisplayable(const std::string &name):
 	Anima<SFMLSpriteData>(name)
