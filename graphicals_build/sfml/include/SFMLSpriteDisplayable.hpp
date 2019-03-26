@@ -12,19 +12,35 @@
 	#include <SFML/Graphics.hpp>
 	#include "IDisplayable.hpp"
 	#include "Cache.hpp"
-	#include "Entity.hpp"
+	#include "Anima.hpp"
+	#include "SFMLArcadeEntity.hpp"
 
-class SFMLSpriteDisplayable : public sf::Sprite, public IDisplayable {
+struct SFMLSpriteData {
+	public:
+	SFMLSpriteData(const Entity::State &data);
+	const std::string	name;
+	sf::IntRect			rect;
+};
+
+class SFMLSpriteDisplayable : public Anima<SFMLSpriteData>, public SFMLArcadeEntity {
 	public:
 		SFMLSpriteDisplayable(const std::string &name);
 		~SFMLSpriteDisplayable() = default;
 
-		class LoadableTexture : public sf::Texture {
+		class LoadableTexture {
 			public:
 			LoadableTexture(const std::string &path) {
-				if (!loadFromFile(path))
+				if (!_texture.loadFromFile(path))
 					throw std::runtime_error("SFML texture load : " + path);
 			}
+
+			operator sf::Texture &()
+			{
+				return _texture;
+			}
+
+			private:
+				sf::Texture	_texture;
 		};
 
 		class SFMLSpriteError : std::runtime_error {
@@ -32,30 +48,16 @@ class SFMLSpriteDisplayable : public sf::Sprite, public IDisplayable {
 			SFMLSpriteError(const std::string &what): std::runtime_error(what){}
 		};
 
-		struct State {
-			public:
-			State(const Entity::State &data);
+		void	onStateChange(const SFMLSpriteData &newState) override;
 
-			const std::string	name;
-			sf::IntRect			rect;
-		};
-
-		void				setState(const std::string &stateName) override;
-		void				setState(std::size_t stateId) override;
-		const std::string	&getState() const override;
-
-		IDisplayable		&operator++() override;
-		IDisplayable		&operator--() override;
-
-		typedef std::vector<std::string>				KeyList;
-		typedef	std::unordered_map<std::string, State>	StateMap;
+		const sf::Drawable		&getDrawable() const override;
+		sf::Transformable		&getTransformable() override;
+		sf::Vector2u			getDimensions() const override;
 
 	protected:
 	private:
-		std::string			_name;
-		KeyList				_keys;
-		StateMap			_states;
-		KeyList::iterator	_currentState;
+
+		sf::Sprite						_sprite;
 
 		static	Cache<LoadableTexture>	TextureCache;
 };

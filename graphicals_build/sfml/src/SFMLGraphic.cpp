@@ -11,11 +11,14 @@
 #include "SFMLTextDisplayable.hpp"
 
 extern "C" {
-	SFMLGraphic	LibObject(1920, 1080);
+	// SFMLGraphic	LibObject(1920, 1080);
+	SFMLGraphic	*CreateHandler()
+	{
+		return new SFMLGraphic(1920, 1080);
+	}
 }
 
 sf::Font		SFMLGraphic::_font;
-Cache<Entity>	SFMLGraphic::EntityCache;
 
 //f*ck sfml and their non-translated keystroke
 
@@ -88,7 +91,8 @@ const SFMLGraphic::Translations	SFMLGraphic::MajTranslator = {
 
 SFMLGraphic::SFMLGraphic(unsigned width, unsigned height):
 	_windowDimensions(width, height),
-	_window(sf::VideoMode(width, height), "Arcade")
+	_window(sf::VideoMode(width, height), "Arcade"),
+	_hasInput(false)
 {
 	if (!_font.loadFromFile("ressources/libs/sfml/fonts/arial.ttf"))
 		throw std::runtime_error("SFML font loading failure : ressources/libs/sfml/fonts/arial.ttf");
@@ -96,10 +100,12 @@ SFMLGraphic::SFMLGraphic(unsigned width, unsigned height):
 
 void            SFMLGraphic::setEntity(float x, float y, IDisplayable &entity)
 {
-	sf::Transformable	&asTransformable = dynamic_cast<sf::Transformable &>(entity);
+	SFMLArcadeEntity	&asEntity = dynamic_cast<SFMLArcadeEntity &>(entity);
+	sf::Transformable	&asTransformable = asEntity.getTransformable();
 	asTransformable.setPosition({x * _cellDimensions.x, y * _cellDimensions.y});
-	asTransformable.setScale({_cellDimensions.x, _cellDimensions.y});
-	sf::Drawable		&asDrawable = dynamic_cast<sf::Drawable &>(asTransformable);
+	const sf::Vector2u	&dimensions = asEntity.getDimensions();
+	asTransformable.setScale({_cellDimensions.x / dimensions.x, _cellDimensions.y / dimensions.y});
+	const sf::Drawable		&asDrawable = asEntity.getDrawable();
 	_toDraw.push(&asDrawable);
 }
 
@@ -107,7 +113,7 @@ void            SFMLGraphic::write(int x, int y, const std::string &text)
 {
 	sf::Text	&textEntity = _texts.emplace_back(text, _font);
 	textEntity.setFillColor(sf::Color::White);
-	textEntity.setScale({_cellDimensions.x, _cellDimensions.y * text.length()});
+	textEntity.setScale({_cellDimensions.x * text.length() / textEntity.getLocalBounds().width, _cellDimensions.y / textEntity.getLocalBounds().height});
 	textEntity.setPosition({x * _cellDimensions.x, y * _cellDimensions.y});
 	_toDraw.push(&textEntity);
 }
@@ -121,15 +127,27 @@ void            SFMLGraphic::setSize(int x, int y)
 	_boardDimensions = {ux, uy};
 }
 
-void            SFMLGraphic::update()
+bool            SFMLGraphic::update()
 {
+	_hasInput = false;
+	sf::Event	ev;
+	while(_window.pollEvent(ev)){
+		if (ev.type == sf::Event::Closed)
+			_window.close();
+		else if (ev.type == sf::Event::KeyPressed) {
+			_hasInput = true;
+			_input = ev.key.code;
+			_majInput = ev.key.shift;
+		}
+	}
 	_window.clear();
 	while (!_toDraw.empty()) {
 		_window.draw(*_toDraw.front());
 		_toDraw.pop();
 	}
-	_texts.clear();
 	_window.display();
+	_texts.clear();
+	return _window.isOpen();
 }
 
 void            SFMLGraphic::clear()
@@ -137,32 +155,20 @@ void            SFMLGraphic::clear()
 	while(!_toDraw.empty())
 		_toDraw.pop();
 	_texts.clear();
-	_window.clear();
 }
 
 IDisplayable    *SFMLGraphic::createDisplayable(const std::string &name)
 {
 	try {
 		return new SFMLSpriteDisplayable(name);
-	} catch(const SFMLSpriteDisplayable::SFMLSpriteError& e) {
+	} catch (const SFMLSpriteDisplayable::SFMLSpriteError &e) {
 		return new SFMLTextDisplayable(name);
 	}
 }
 
 bool			SFMLGraphic::hasInput()
 {
-	bool	inp = false;
-	sf::Event	ev;
-	while(_window.pollEvent(ev)){
-		if (ev.type == sf::Event::Closed)
-			_window.close();
-		else if (ev.type == sf::Event::KeyPressed) {
-			inp = true;
-			_input = ev.key.code;
-			_majInput = ev.key.shift;
-		}
-	}
-	return inp;
+	return _hasInput;
 }
 
 int32_t			SFMLGraphic::getInput()

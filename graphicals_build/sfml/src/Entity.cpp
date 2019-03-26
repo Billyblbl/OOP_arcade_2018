@@ -9,6 +9,11 @@
 #include <sstream>
 #include "Entity.hpp"
 
+//debug
+#include <iostream>
+
+Cache<Entity>	Entity::ArcadeCache;
+
 Entity::Entity(const std::string &path):
 	_spritePath("")
 {
@@ -52,8 +57,9 @@ Entity::State::State(const std::string &format)
 	name = split[0];
 	upLeft = split[1];
 	downRight = split[2];
-	color.value = static_cast<unsigned>(std::atoi(split[3].c_str()));
-	backColor.value = static_cast<unsigned>(std::atoi(split[4].c_str()));
+	color.value = static_cast<unsigned>(std::stoul(split[3], nullptr, 16));
+	std::cout << "entity : color=" << color.value << std::endl;
+	backColor.value = static_cast<unsigned>(std::stoul(split[4], nullptr, 16));
 	ascii = split[5][0];
 }
 

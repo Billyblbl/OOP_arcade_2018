@@ -10,22 +10,7 @@
 
 Cache<SFMLSpriteDisplayable::LoadableTexture>	SFMLSpriteDisplayable::TextureCache;
 
-SFMLSpriteDisplayable::SFMLSpriteDisplayable(const std::string &name):
-	_name(name)
-{
-	Entity		&entity = SFMLGraphic::EntityCache.get(name);
-	if (entity.getSpritePath() == "undefined")
-		throw SFMLSpriteError("Can't build Sprite Displayable without a texture");
-	for (auto &state : entity) {
-		_keys.emplace_back(state.name);
-		_states.emplace(state.name, state);
-	}
-	sf::Texture	&texture = TextureCache.get(entity.getSpritePath());
-	setTexture(texture);
-	setState(0);
-}
-
-SFMLSpriteDisplayable::State::State(const Entity::State &data):
+SFMLSpriteData::SFMLSpriteData(const Entity::State &data):
 	name(data.name),
 	rect(data.upLeft.x,
 		 data.upLeft.y,
@@ -33,42 +18,33 @@ SFMLSpriteDisplayable::State::State(const Entity::State &data):
 		 data.downRight.y - data.upLeft.y)
 {}
 
-void			SFMLSpriteDisplayable::setState(const std::string &stateName)
+SFMLSpriteDisplayable::SFMLSpriteDisplayable(const std::string &name):
+	Anima<SFMLSpriteData>(name)
 {
-	State	&state = _states.at(stateName);
-	_currentState = std::find(_keys.begin(), _keys.end(), stateName);
-	setTextureRect(state.rect);
+	if (_spritePath == "undefined")
+		throw SFMLSpriteError("Can't build Sprite Displayable without a texture");
+	sf::Texture	&texture = TextureCache.get(_spritePath);
+	_sprite.setTexture(texture);
+	setState(0);
 }
 
-void			SFMLSpriteDisplayable::setState(std::size_t stateId)
+void	SFMLSpriteDisplayable::onStateChange(const SFMLSpriteData &newState)
 {
-	State	&state = _states.at(_keys[stateId]);
-	_currentState = _keys.begin() + static_cast<long int>(stateId);
-	setTextureRect(state.rect);
+	_sprite.setTextureRect(newState.rect);
 }
 
-const std::string	&SFMLSpriteDisplayable::getState() const
+const sf::Drawable	&SFMLSpriteDisplayable::getDrawable() const
 {
-	return *_currentState;
+	return _sprite;
 }
 
-IDisplayable		&SFMLSpriteDisplayable::operator++()
+sf::Transformable		&SFMLSpriteDisplayable::getTransformable()
 {
-	_currentState++;
-	if (_currentState == _keys.end())
-		_currentState = _keys.begin();
-	State	&state = _states.at(*_currentState);
-	setTextureRect(state.rect);
-	return *this;
+	return _sprite;
 }
 
-IDisplayable		&SFMLSpriteDisplayable::operator--()
+sf::Vector2u			SFMLSpriteDisplayable::getDimensions() const
 {
-	if (_currentState == _keys.begin())
-		_currentState = _keys.end() - 1;
-	else
-		_currentState--;
-	State	&state = _states.at(*_currentState);
-	setTextureRect(state.rect);
-	return *this;
+	const sf::FloatRect	&rect = _sprite.getLocalBounds();
+	return sf::Vector2u(rect.width, rect.height);
 }

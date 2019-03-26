@@ -8,64 +8,39 @@
 #include "SFMLTextDisplayable.hpp"
 #include "SFMLGraphic.hpp"
 
-SFMLTextDisplayable::SFMLTextDisplayable(const std::string &name):
-	sf::Text("", SFMLGraphic::getFont())
-{
-	Entity	&entity = SFMLGraphic::EntityCache.get(name);
-	for (auto &state : entity) {
-		_keys.emplace_back(state.name);
-		_states.emplace(state.name, state);
-	}
-	setState(0);
-}
-
-SFMLTextDisplayable::State::State(const Entity::State &data):
+SFMLAsciiData::SFMLAsciiData(const Entity::State &data):
 	name(data.name),
 	asciiImg(data.ascii),
 	color(sf::Color(data.color.value))
 {}
 
-void	SFMLTextDisplayable::setState(const std::string &stateName)
+SFMLTextDisplayable::SFMLTextDisplayable(const std::string &name):
+	Anima<SFMLAsciiData>(name),
+	_text("", SFMLGraphic::getFont())
 {
-	State	&state = _states.at(stateName);
-	_currentState = std::find(_keys.begin(), _keys.end(), stateName);
-	setString(state.asciiImg);
-	setFillColor(state.color);
+	setState(0);
 }
 
-void	SFMLTextDisplayable::setState(std::size_t stateId)
+void	SFMLTextDisplayable::onStateChange(const SFMLAsciiData &newState)
 {
-	State	&state = _states.at(_keys[stateId]);
-	_currentState = _keys.begin() + static_cast<long int>(stateId);
-	setString(state.asciiImg);
-	setFillColor(state.color);
+	_text.setString(newState.asciiImg);
+	_text.setFillColor(newState.color);
 }
 
-const std::string	&SFMLTextDisplayable::getState() const
+//I should be able to define all that once and "alias" them all to one or smth
+
+const sf::Drawable	&SFMLTextDisplayable::getDrawable() const
 {
-	return *_currentState;
+	return _text;
 }
 
-IDisplayable		&SFMLTextDisplayable::operator++()
+sf::Transformable		&SFMLTextDisplayable::getTransformable()
 {
-	_currentState++;
-	if (_currentState == _keys.end())
-		_currentState = _keys.begin();
-	State	&state = _states.at(*_currentState);
-	setString(state.asciiImg);
-	setFillColor(state.color);
-	return *this;
+	return _text;
 }
 
-IDisplayable		&SFMLTextDisplayable::operator--()
+sf::Vector2u			SFMLTextDisplayable::getDimensions() const
 {
-	if (_currentState == _keys.begin())
-		_currentState = _keys.end() - 1;
-	else
-		_currentState--;
-	State	&state = _states.at(*_currentState);
-	setString(state.asciiImg);
-	setFillColor(state.color);
-	return *this;
+	const sf::FloatRect	&rect = _text.getLocalBounds();
+	return sf::Vector2u(rect.width, rect.height);
 }
-

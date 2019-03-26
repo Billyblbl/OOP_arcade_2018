@@ -10,6 +10,7 @@
 
 	#include <string>
 	#include <vector>
+	#include "Cache.hpp"
 
 class Entity {
 	public:
@@ -29,6 +30,7 @@ class Entity {
 			uint8_t		r;
 			uint8_t		g;
 			uint8_t		b;
+			uint8_t		a;
 			uint32_t	value;
 		};
 
@@ -50,6 +52,8 @@ class Entity {
 		iterator			begin();
 		iterator			end();
 		const std::string	&getSpritePath() const;
+
+		static	Cache<Entity>			ArcadeCache;
 
 	protected:
 	private:

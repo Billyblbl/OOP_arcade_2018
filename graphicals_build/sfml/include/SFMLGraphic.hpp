@@ -22,7 +22,7 @@ class SFMLGraphic : public IGraphic {
     	void            setEntity(float x, float y, IDisplayable &entity) override;
     	void            write(int x, int y, const std::string &text) override;
     	void            setSize(int x, int y) override;
-    	void            update() override;
+    	bool            update() override;
     	void            clear() override;
     	IDisplayable    *createDisplayable(const std::string &name) override;
 		bool			hasInput() override;
@@ -30,26 +30,25 @@ class SFMLGraphic : public IGraphic {
 
 		static const sf::Font	&getFont();
 
-		static	Cache<Entity>			EntityCache;
-
 		typedef	std::unordered_map<sf::Keyboard::Key, int32_t>	Translations;
-		typedef std::queue<sf::Drawable *>						RenderQueue;
+		typedef std::queue<const sf::Drawable *>				RenderQueue;
 		typedef	std::vector<sf::Text>							TextList;
 
 	protected:
 	private:
-		sf::Vector2f		_cellDimensions;
-		sf::Vector2u		_boardDimensions;
-
 		sf::Vector2u		_windowDimensions;
 		sf::RenderWindow	_window;
 		static sf::Font		_font;
 
-		RenderQueue			_toDraw;
-		TextList			_texts;
-
+		bool				_hasInput;
 		sf::Keyboard::Key	_input;
 		bool				_majInput;
+
+		sf::Vector2f		_cellDimensions;
+		sf::Vector2u		_boardDimensions;
+
+		RenderQueue			_toDraw;
+		TextList			_texts;
 
 		static const Translations	Translator;
 		static const Translations	MajTranslator;
