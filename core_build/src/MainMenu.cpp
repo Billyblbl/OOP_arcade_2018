@@ -7,17 +7,22 @@
 
 #include "MainMenu.hpp"
 
-MainMenu::MainMenu():
+MainMenu::MainMenu(IGraphic &handler):
 	_gameList("./games", "./games/lib_arcade_", ".so"),
 	_glibList("./lib", "./lib/lib_arcade_", ".so"),
-	_gameCursor(_gameList.begin(), nullptr, Position2F({0.0f, 0.0f})),
-	_glibCursor(_glibList.begin(), nullptr, Position2F({50.0f, 0.0f})),
-	_screen(nullptr)
+	_screen(&handler),
+	_gameCursor(_gameList,
+				_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"),
+				Position2F({0.0f, 0.0f})),
+	_glibCursor(_glibList,
+				_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"),
+				Position2F({50.0f, 0.0f}))
 {
-	_keyBinds[KeyCode::arrowUp] = [this](){this->incGameCursor(true);};
-	_keyBinds[KeyCode::arrowDown] = [this](){this->incGameCursor();};
-	_keyBinds[KeyCode::pageUp] = [this](){this->incGlibCursor(true);};
-	_keyBinds[KeyCode::pageDown] = [this](){this->incGlibCursor();};
+	_screen->setSize(100, 100);
+	_keyBinds[KeyCode::arrowUp] = [this](){--this->_gameCursor;};
+	_keyBinds[KeyCode::arrowDown] = [this](){++this->_gameCursor;};
+	_keyBinds[KeyCode::pageUp] = [this](){--this->_glibCursor;};
+	_keyBinds[KeyCode::pageDown] = [this](){++this->_glibCursor;};
 	_keyBinds['r'] = [this](){this->refresh();};
 	_keyBinds['\n'] = [this](){this->_gameCursor.select();};
 	_keyBinds['g'] = [this](){this->_glibCursor.select();};
@@ -26,9 +31,9 @@ MainMenu::MainMenu():
 bool	MainMenu::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime)
 {
 	for (unsigned short i = 0; i < _gameList.length() && i <= 50; i++)
-		_screen->write(1, i, _gameList[i].name);
+		_screen->write(2, i, _gameList[i].name);
 	for (unsigned short i = 0; i < _glibList.length() && i <= 50; i++)
-		_screen->write(1, i, _glibList[i].name);
+		_screen->write(2, i, _glibList[i].name);
 	_screen->setEntity(_gameCursor.getPos().x, _gameCursor.getPos().y, _gameCursor);
 	_screen->setEntity(_glibCursor.getPos().x, _glibCursor.getPos().y, _glibCursor);
 	return true;
@@ -48,7 +53,6 @@ void	MainMenu::setGraphic(IGraphic &handler)
 	_screen->setSize(100, 100);
 	_gameCursor.reset(_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"));
 	_glibCursor.reset(_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"));
-	_emptyEntity.reset(_screen->createDisplayable("./ressources/core/entities/menu.empty.entity"));
 	refresh();
 }
 

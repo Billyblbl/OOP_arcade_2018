@@ -7,34 +7,46 @@
 
 #include "MainMenu.hpp"
 
-MainMenu::Cursor::Cursor(DirectoryMenu::iterator it,
+MainMenu::Cursor::Cursor(DirectoryMenu &directory,
 						 IDisplayable *entity,
 						 MainMenu::Position2F position):
-	_iterator(it),
+	_directory(&directory),
+	_iterator(_directory->begin()),
 	_entity(entity),
 	_position(position),
+	_initPosition(position),
 	_selected(false)
 {}
 
-//act as iterator
+//act as iterator (but wrapping around)
 
 MainMenu::Cursor	&MainMenu::Cursor::operator++()
 {
 	_iterator++;
-	_position.y++;
+	if (_iterator == _directory->end()) {
+		_iterator = _directory->begin();
+		_position = _initPosition;
+	} else
+		_position.y++;
 	return *this;
 }
 
 MainMenu::Cursor	&MainMenu::Cursor::operator--()
 {
-	_iterator--;
-	_position.y--;
+	if (_iterator == _directory->begin()) {
+		_iterator = _directory->end() - 1;
+		_position.y = _initPosition.y + _directory->length() - 1;
+	} else {
+		_iterator--;
+		_position.y--;
+	}
 	return *this;
 }
 
 MainMenu::Cursor	&MainMenu::Cursor::operator=(DirectoryMenu::iterator rhs)
 {
 	_iterator = rhs;
+	_position.y = _initPosition.y + (rhs - _directory->begin());
 	return *this;
 }
 
@@ -55,12 +67,12 @@ MainMenu::Cursor::operator	DirectoryMenu::MenuEntry &()
 
 DirectoryMenu::MenuEntry	*MainMenu::Cursor::operator->()
 {
-	return _iterator.base();
+	return &(*_iterator);
 }
 
 const DirectoryMenu::MenuEntry	*MainMenu::Cursor::operator->() const
 {
-	return _iterator.base();
+	return &(*_iterator);
 }
 
 DirectoryMenu::MenuEntry	&MainMenu::Cursor::operator*()
@@ -105,4 +117,8 @@ bool					MainMenu::Cursor::isSelected() const
 void					MainMenu::Cursor::select(bool on)
 {
 	_selected = on;
+	if (on)
+		_entity->setState("selected");
+	else
+		_entity->setState("untouched");
 }

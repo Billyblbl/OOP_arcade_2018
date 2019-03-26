@@ -15,6 +15,9 @@
 class MainMenu : public IGame {
 	public:
 
+		MainMenu(IGraphic &handler);
+		~MainMenu() = default;
+
 		typedef	std::unique_ptr<IDisplayable>	DisplayablePtr;
 
 		struct Position2F {
@@ -27,7 +30,7 @@ class MainMenu : public IGame {
 		class Cursor {
 			public:
 
-			Cursor(DirectoryMenu::iterator it, IDisplayable *entity, Position2F position);
+			Cursor(DirectoryMenu &directory, IDisplayable *entity, Position2F position);
 
 			//act as iterator
 			Cursor	&operator++();
@@ -54,15 +57,15 @@ class MainMenu : public IGame {
 
 			// private:
 
+			DirectoryMenu			*_directory;
 			DirectoryMenu::iterator	_iterator;
 			DisplayablePtr			_entity;
 			Position2F				_position;
+			const Position2F		_initPosition;
 			bool					_selected;
 
 		};
 
-		MainMenu();
-		~MainMenu() = default;
 
 	    bool	update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime) override;
 		void	handleKey(int32_t key) override;
@@ -80,16 +83,12 @@ class MainMenu : public IGame {
 	private:
 
 		void	refresh();
-		void	incGameCursor(bool reverse = false);
-		void	incGlibCursor(bool reverse = false);
 
 		DirectoryMenu	_gameList;
 		DirectoryMenu	_glibList;
+		IGraphic		*_screen;
 		Cursor			_gameCursor;
 		Cursor			_glibCursor;
-		IGraphic		*_screen;
-
-		DisplayablePtr			_emptyEntity;
 
 		std::unordered_map<int32_t, Action>	_keyBinds;
 

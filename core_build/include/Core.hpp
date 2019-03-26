@@ -20,7 +20,7 @@
 class Core {
 	public:
 		Core(const std::string &path);
-		~Core();
+		~Core() = default;
 
 		void	addGame(const std::string &path);
 		void	setGraphic(const std::string &path);
