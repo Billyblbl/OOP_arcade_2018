@@ -21,7 +21,7 @@ export CPPFLAGS	+=	-W\
 					-Wno-non-virtual-dtor\
 					-std=c++17
 
-export CPPFLAGS +=	-I$(shell pwd)/interfaces
+export CPPFLAGS +=	-I$(shell pwd)/interfaces -I$(shell pwd)/include
 #export CPPFLAGS	+=	-g3
 
 SUBSYSTEM	=	core\
