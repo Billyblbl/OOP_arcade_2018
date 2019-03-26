@@ -37,7 +37,7 @@ DIRS		=	./lib/\
 
 all: $(SUBSYSTEM)
 
-debug: export CPPFLAGS += -g3
+debug: export CPPFLAGS += -g3 #-D_GLIBCXX_DEBUG
 debug: re
 
 $(DIRS):
