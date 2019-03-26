@@ -52,7 +52,6 @@ void	MainMenu::handleKey(int32_t key)
 void	MainMenu::setGraphic(IGraphic &handler)
 {
 	_screen = &handler;
-	_screen->setSize(100, 100);
 	_gameCursor.reset(_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"));
 	_glibCursor.reset(_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"));
 	refresh();
@@ -73,6 +72,7 @@ void	MainMenu::refresh()
 
 void	MainMenu::onEnable()
 {
+	_screen->setSize(100, 100);
 	refresh();
 }
 
