@@ -8,6 +8,7 @@
 #ifndef IGRAPHIC_HPP_
 	#define IGRAPHIC_HPP_
 
+	#include <string>
 	#include "IDisplayable.hpp"
 
 class IGraphic {
@@ -33,7 +34,7 @@ class IGraphic {
 	virtual void            setSize(int x, int y) = 0;
 
 	//Updates screen with all entities drawn on it with "setEntity" & "write"
-	virtual void            update() = 0;
+	virtual bool            update() = 0;
 
 	//Clear the screen defined by the handler
 	virtual void            clear() = 0;

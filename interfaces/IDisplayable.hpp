@@ -8,6 +8,8 @@
 #ifndef IDISPLAYABLE_HPP_
 	#define IDISPLAYABLE_HPP_
 
+	#include <string>
+
 class IDisplayable {
 	public:
 
