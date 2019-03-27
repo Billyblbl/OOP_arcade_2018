@@ -8,29 +8,14 @@
 #include "SFMLTextDisplayable.hpp"
 #include "SFMLGraphic.hpp"
 
-SFMLAsciiData::SFMLAsciiData(const std::string &dataName,
-							 Vector2<int> &dataUpLeft,
-							 Vector2<int> &dataDownRight,
-							 Color dataColor,
-							 Color dataBackColor,
-							 char dataAscii):
-	name(dataName),
-	asciiImg(dataAscii),
-	color(sf::Color(dataColor.value))
-{
-	(void)dataUpLeft;
-	(void)dataDownRight;
-	(void)dataBackColor;
-}
-
 SFMLTextDisplayable::SFMLTextDisplayable(const std::string &name):
-	Anima<SFMLAsciiData>(name),
+	Anima<SFMLTextState>(name),
 	_text("", SFMLGraphic::getFont())
 {
 	setState(0);
 }
 
-void	SFMLTextDisplayable::onStateChange(const SFMLAsciiData &newState)
+void	SFMLTextDisplayable::onStateChange(const SFMLTextState &newState)
 {
 	_text.setString(newState.asciiImg);
 	_text.setFillColor(newState.color);

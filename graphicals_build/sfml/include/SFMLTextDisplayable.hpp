@@ -11,28 +11,14 @@
 	#include "SFML/Graphics.hpp"
 	#include "Anima.hpp"
 	#include "SFMLArcadeEntity.hpp"
-	#include "Types.hpp"
+	#include "SFMLTextState.hpp"
 
-struct SFMLAsciiData {
-	public:
-	SFMLAsciiData(const std::string &dataName,
-				  Vector2<int> &dataUpLeft,
-				  Vector2<int> &dataDownRight,
-				  Color dataColor,
-				  Color dataBackColor,
-				  char dataAscii);
-
-	const std::string	name;
-	char				asciiImg;
-	sf::Color			color;
-};
-
-class SFMLTextDisplayable : public Anima<SFMLAsciiData>, public SFMLArcadeEntity {
+class SFMLTextDisplayable : public Anima<SFMLTextState>, public SFMLArcadeEntity {
 	public:
 		SFMLTextDisplayable(const std::string &name);
 		~SFMLTextDisplayable() = default;
 
-		void	onStateChange(const SFMLAsciiData &newState) override;
+		void	onStateChange(const SFMLTextState &newState) override;
 
 		const sf::Drawable		&getDrawable() const override;
 		sf::Transformable		&getTransformable() override;

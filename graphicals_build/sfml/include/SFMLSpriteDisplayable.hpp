@@ -14,21 +14,9 @@
 	#include "Cache.hpp"
 	#include "Anima.hpp"
 	#include "SFMLArcadeEntity.hpp"
+	#include "SFMLSpriteState.hpp"
 
-struct SFMLSpriteData {
-	public:
-		SFMLSpriteData(const std::string &dataName,
-					   Vector2<int> &dataUpLeft,
-					   Vector2<int> &dataDownRight,
-					   Color dataColor,
-					   Color dataBackColor,
-					   char dataAscii);
-
-		const std::string	name;
-		sf::IntRect			rect;
-};
-
-class SFMLSpriteDisplayable : public Anima<SFMLSpriteData>, public SFMLArcadeEntity {
+class SFMLSpriteDisplayable : public Anima<SFMLSpriteState>, public SFMLArcadeEntity {
 	public:
 		SFMLSpriteDisplayable(const std::string &name);
 		~SFMLSpriteDisplayable() = default;
@@ -54,7 +42,7 @@ class SFMLSpriteDisplayable : public Anima<SFMLSpriteData>, public SFMLArcadeEnt
 			SFMLSpriteError(const std::string &what): std::runtime_error(what){}
 		};
 
-		void	onStateChange(const SFMLSpriteData &newState) override;
+		void	onStateChange(const SFMLSpriteState &newState) override;
 
 		const sf::Drawable		&getDrawable() const override;
 		sf::Transformable		&getTransformable() override;

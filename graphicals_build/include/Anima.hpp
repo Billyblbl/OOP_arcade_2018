@@ -66,7 +66,6 @@ Anima<State>::Anima(const std::string &path):
 	_spritePath(""),
 	_path(path)
 {
-	std::vector<StateData>	states;
 	std::ifstream	file(path);
 	if (!file.is_open())
 		throw std::runtime_error(std::string(__func__) + "Can't open entity file : " + path);
@@ -79,7 +78,7 @@ Anima<State>::Anima(const std::string &path):
 		else {
 			StateData	data(buf);
 			_keys.emplace_back(data.name);
-			_states.insert(std::make_pair(data.name, data));
+			_states[data.name] = data;
 		}
 	}
 }
