@@ -13,9 +13,9 @@ RESS	=	../ressources/core
 
 SRC	=	src/Core.cpp\
 		src/DirectoryMenu.cpp\
-		src/MenuEntry.cpp\
+		src/DirectoryMenu.MenuEntry.cpp\
 		src/MainMenu.cpp\
-		src/MainMenuCursor.cpp\
+		src/MainMenu.Cursor.cpp\
 		src/main.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
