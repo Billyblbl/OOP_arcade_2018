@@ -10,25 +10,8 @@
 
 Cache<SFMLSpriteDisplayable::LoadableTexture>	SFMLSpriteDisplayable::TextureCache;
 
-SFMLSpriteData::SFMLSpriteData(const std::string &dataName,
-							   Vector2<int> &dataUpLeft,
-							   Vector2<int> &dataDownRight,
-							   Color dataColor,
-							   Color dataBackColor,
-							   char dataAscii):
-	name(dataName),
-	rect(dataUpLeft.x,
-		 dataUpLeft.y,
-		 dataDownRight.x - dataUpLeft.x,
-		 dataDownRight.y - dataUpLeft.y)
-{
-	(void)dataColor;
-	(void)dataBackColor;
-	(void)dataAscii;
-}
-
 SFMLSpriteDisplayable::SFMLSpriteDisplayable(const std::string &name):
-	Anima<SFMLSpriteData>(name)
+	Anima<SFMLSpriteState>(name)
 {
 	if (_spritePath == "undefined")
 		throw SFMLSpriteError("Can't build Sprite Displayable without a texture");
@@ -37,7 +20,7 @@ SFMLSpriteDisplayable::SFMLSpriteDisplayable(const std::string &name):
 	setState(0);
 }
 
-void	SFMLSpriteDisplayable::onStateChange(const SFMLSpriteData &newState)
+void	SFMLSpriteDisplayable::onStateChange(const SFMLSpriteState &newState)
 {
 	_sprite.setTextureRect(newState.rect);
 }
