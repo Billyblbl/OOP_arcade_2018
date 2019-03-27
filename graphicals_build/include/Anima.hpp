@@ -16,6 +16,8 @@
 	#include "IDisplayable.hpp"
 	#include "Types.hpp"
 
+	#include <iostream>
+
 template<class State>
 class Anima : public IDisplayable {
 	public:
@@ -27,7 +29,7 @@ class Anima : public IDisplayable {
 			public:
 			StateData() = default;
 			StateData(const std::string &format);
-			operator State();
+			operator State &();
 
 			std::string		name;
 			Vector2<int>	upLeft;
@@ -35,6 +37,9 @@ class Anima : public IDisplayable {
 			Color			color;
 			Color			backColor;
 			char			ascii;
+
+			private:
+			State			_buf;
 		};
 
 		void				setState(const std::string &stateName) override final;
@@ -99,13 +104,14 @@ Anima<State>::StateData::StateData(const std::string &format)
 	color.value = static_cast<unsigned>(std::stoul(split[3], nullptr, 16));
 	backColor.value = static_cast<unsigned>(std::stoul(split[4], nullptr, 16));
 	ascii = split[5][0];
+	_buf = State(name, upLeft, downRight, color, backColor, ascii);
 }
 
 
 template<class State>
-Anima<State>::StateData::operator State()
+Anima<State>::StateData::operator State &()
 {
-	return State(name, upLeft, downRight, color, backColor, ascii);
+	return _buf;
 }
 
 
@@ -113,6 +119,8 @@ template<class State>
 void	Anima<State>::setState(const std::string &stateName)
 {
 	_currentState = _states.find(stateName);
+	if (_currentState == _states.end())
+		throw std::runtime_error(std::string(__func__) + " : unknown state : " + stateName);
 	_currentStateName = std::find(_keys.begin(), _keys.end(), stateName);
 	onStateChange(_currentState->second);
 }
@@ -120,6 +128,8 @@ void	Anima<State>::setState(const std::string &stateName)
 template<class State>
 void	Anima<State>::setState(std::size_t stateId)
 {
+	if (stateId >= _keys.size())
+		throw std::runtime_error(std::string(__func__) + " : unknown state n°" + std::to_string(stateId));
 	setState(_keys[stateId]);
 }
 
