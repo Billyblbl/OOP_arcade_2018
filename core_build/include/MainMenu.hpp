@@ -15,9 +15,7 @@
 class MainMenu : public IGame {
 	public:
 
-		typedef std::function<void (const std::string &path)>	Selector;
-
-		MainMenu(IGraphic &handler, Selector gameSelector, Selector glibSelector);
+		MainMenu(IGraphic &handler);
 		~MainMenu() = default;
 
 		typedef	std::unique_ptr<IDisplayable>	DisplayablePtr;
@@ -30,7 +28,7 @@ class MainMenu : public IGame {
 		class Cursor {
 			public:
 
-			Cursor(DirectoryMenu &directory, IDisplayable *entity, Position2F position, Selector sel);
+			Cursor(DirectoryMenu &directory, IDisplayable *entity, Position2F position);
 
 			//act as iterator
 			Cursor	&operator++();
@@ -63,7 +61,6 @@ class MainMenu : public IGame {
 			Position2F				_position;
 			const Position2F		_initPosition;
 			bool					_selected;
-			Selector				_sel;
 
 		};
 
@@ -79,6 +76,8 @@ class MainMenu : public IGame {
 
 		bool	hasSelectedGame() const;
 		bool	hasSelectedGlib() const;
+
+		void	endSelect();
 
 	protected:
 	private:

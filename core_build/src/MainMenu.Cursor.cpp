@@ -9,36 +9,38 @@
 
 MainMenu::Cursor::Cursor(DirectoryMenu &directory,
 						 IDisplayable *entity,
-						 MainMenu::Position2F position,
-						 Selector sel):
+						 MainMenu::Position2F position):
 	_directory(&directory),
 	_iterator(_directory->begin()),
 	_entity(entity),
 	_position(position),
 	_initPosition(position),
-	_selected(false),
-	_sel(sel)
+	_selected(false)
 {}
 
 //act as iterator (but wrapping around)
 
 MainMenu::Cursor	&MainMenu::Cursor::operator++()
 {
+	if (_directory->length() == 0)
+		return *this;
 	_iterator++;
-	if (_iterator == _directory->end()) {
+	if (_iterator >= _directory->end()) {
 		_iterator = _directory->begin();
 		_position = _initPosition;
-	} else
+	} else if (_iterator >= _directory->begin())
 		_position.y++;
 	return *this;
 }
 
 MainMenu::Cursor	&MainMenu::Cursor::operator--()
 {
-	if (_iterator == _directory->begin()) {
+	if (_directory->length() == 0)
+		return *this;
+	if (_iterator <= _directory->begin()) {
 		_iterator = _directory->end() - 1;
 		_position.y = _initPosition.y + _directory->length() - 1;
-	} else {
+	} else if (_iterator <= _directory->end()) {
 		_iterator--;
 		_position.y--;
 	}
@@ -119,9 +121,8 @@ bool					MainMenu::Cursor::isSelected() const
 void					MainMenu::Cursor::select(bool on)
 {
 	_selected = on;
-	if (on) {
+	if (on)
 		_entity->setState("selected");
-		_sel(_iterator->path);
-	} else
+	else
 		_entity->setState("untouched");
 }
