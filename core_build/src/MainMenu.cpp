@@ -7,18 +7,16 @@
 
 #include "MainMenu.hpp"
 
-MainMenu::MainMenu(IGraphic &handler, MainMenu::Selector gameSelector, MainMenu::Selector glibSelector):
+MainMenu::MainMenu(IGraphic &handler):
 	_gameList("./games", "./games/lib_arcade_", ".so"),
 	_glibList("./lib", "./lib/lib_arcade_", ".so"),
 	_screen(&handler),
 	_gameCursor(_gameList,
 				_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"),
-				Position2F({0.0f, 0.0f}),
-				gameSelector),
+				Position2F({0.0f, 0.0f})),
 	_glibCursor(_glibList,
 				_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"),
-				Position2F({50.0f, 0.0f}),
-				glibSelector)
+				Position2F({50.0f, 0.0f}))
 {
 	_screen->setSize(100, 100);
 	_keyBinds[KeyCode::arrowUp] = [this](){--this->_gameCursor;};
@@ -35,7 +33,7 @@ bool	MainMenu::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTi
 	for (unsigned short i = 0; i < _gameList.length() && i <= 50; i++)
 		_screen->write(2, i, _gameList[i].name);
 	for (unsigned short i = 0; i < _glibList.length() && i <= 50; i++)
-		_screen->write(2, i, _glibList[i].name);
+		_screen->write(52, i, _glibList[i].name);
 	_screen->setEntity(_gameCursor.getPos().x, _gameCursor.getPos().y, _gameCursor);
 	_screen->setEntity(_glibCursor.getPos().x, _glibCursor.getPos().y, _glibCursor);
 	return true;
@@ -99,3 +97,8 @@ bool	MainMenu::hasSelectedGlib() const
 	return _glibCursor.isSelected();
 }
 
+void	MainMenu::endSelect()
+{
+	_gameCursor.select(false);
+	_glibCursor.select(false);
+}

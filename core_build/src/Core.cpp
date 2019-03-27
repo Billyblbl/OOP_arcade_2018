@@ -16,9 +16,7 @@ Core::Core(const std::string &path):
 	_screen(new GraphicHandler(path)),
 	_games({}),
 	_currentGame(_games.begin()),
-	_mainMenu(getScreen(),
-			  [this](const std::string &gamePath){this->addGame(gamePath);},
-			  [this](const std::string &glibPath){this->setGraphic(glibPath);})
+	_mainMenu(getScreen())
 {}
 
 void	Core::addGame(const std::string &path)
@@ -32,6 +30,7 @@ void	Core::addGame(const std::string &path)
 
 void	Core::setGraphic(const std::string &path)
 {
+	std::cout << __func__ << std::endl;
 	getCurrentGame().onDisable();
 	GraphicHandler	*newHandler = new GraphicHandler(path);
 	_mainMenu.setGraphic(*newHandler);
@@ -41,27 +40,40 @@ void	Core::setGraphic(const std::string &path)
 	getCurrentGame().onEnable();
 }
 
+bool	Core::update(const TimePoint<Second> &start, TimePoint<Nano> &last)
+{
+	IGame		&game = getCurrentGame();
+	IGraphic	&screen = getScreen();
+	screen.clear();
+	if (screen.hasInput()) {
+		//handle core specific keybinds here
+		game.handleKey(screen.getInput());
+	}
+	TimePoint<Nano>		now(Clock::now());
+	TimePoint<Second>	secNow(std::chrono::time_point_cast<Second>(now));
+	bool	runGame = game.update(now - last, secNow - start);
+	bool	runArcade = screen.update();
+	last = now;
+	if (!runGame && _games.size() == 0)
+		runArcade = false;
+	else if (!runGame) {
+		game.onDisable();
+		_games.erase(_currentGame);
+		_currentGame = _games.begin();
+	}
+	return runArcade;
+}
+
 void	Core::run()
 {
-	bool				running = true;
 	TimePoint<Second>	start(std::chrono::time_point_cast<Second>(Clock::now()));
 	TimePoint<Nano>		last(start);
-	IGame				&game = getCurrentGame();
-	IGraphic			&screen = getScreen();
-	while (running) {
-		screen.clear();
-		if (screen.hasInput())
-			game.handleKey(screen.getInput());
-		TimePoint<Nano>		now(Clock::now());
-		TimePoint<Second>	secNow(std::chrono::time_point_cast<Second>(now));
-		running = game.update(now - last, secNow - start);
-		screen.update();
-		last = now;
-		if (!running) {
-			game.onDisable();
-			_games.erase(_currentGame);
-			_currentGame = _games.begin();
-		}
+	while (update(start, last)) {
+		if (_mainMenu.hasSelectedGame())
+			addGame(_mainMenu.getGame());
+		if (_mainMenu.hasSelectedGlib())
+			setGraphic(_mainMenu.getGlib());
+		_mainMenu.endSelect();
 	}
 }
 
