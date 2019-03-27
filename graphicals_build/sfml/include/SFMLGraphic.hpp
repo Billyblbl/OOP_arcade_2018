@@ -29,8 +29,25 @@ class SFMLGraphic : public IGraphic {
 
 		static const sf::Font	&getFont();
 
+		struct DrawRequest {
+			public:
+				DrawRequest(const sf::Drawable &_drawable,
+							sf::Transformable &_transformable,
+							sf::Vector2f &&_scale,
+							sf::Vector2f &&_position);
+
+				void				draw(sf::RenderWindow &window);
+
+			private:
+				const sf::Drawable	*drawable;
+				sf::Transformable	*transformable;
+				sf::Vector2f		scale;
+				sf::Vector2f		position;
+		};
+
+
 		typedef	std::unordered_map<sf::Keyboard::Key, int32_t>	Translations;
-		typedef std::queue<const sf::Drawable *>				RenderQueue;
+		typedef std::queue<DrawRequest>							RenderQueue;
 		typedef	std::vector<sf::Text>							TextList;
 
 	protected:

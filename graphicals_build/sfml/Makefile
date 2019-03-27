@@ -8,6 +8,7 @@
 LIB	=	lib_arcade_sfml.so
 
 SRC	=	./src/SFMLGraphic.cpp\
+		./src/SFMLGraphic.DrawRequest.cpp\
 		./src/SFMLSpriteDisplayable.cpp\
 		./src/SFMLTextDisplayable.cpp\
 		./src/SFMLSpriteState.cpp\
