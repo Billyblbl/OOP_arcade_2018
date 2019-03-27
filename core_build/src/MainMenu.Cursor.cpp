@@ -120,7 +120,7 @@ bool					MainMenu::Cursor::isSelected() const
 
 void					MainMenu::Cursor::select(bool on)
 {
-	_selected = on;
+	_selected = (on && _directory->length() > 0);
 	if (on)
 		_entity->setState("selected");
 	else
