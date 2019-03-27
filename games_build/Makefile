@@ -28,11 +28,11 @@ $(DIRS):
 	$(foreach DIR, $(DIRS), mkdir -p $(DIR))
 
 links: $(GAMES) $(DIRS)
-	echo "Linking games libraries"
+	@echo "Linking games libraries"
 	$(foreach LIB, $(GAMES), ln -sf $(CURDIR)/$(LIB)/lib_arcade_$(LIB).so ../games/lib_arcade_$(LIB).so;)
-	echo "Linking each game librairies ressources in central games lib ressources folder"
+	@echo "Linking each game librairies ressources in central games lib ressources folder"
 	$(foreach LIB, $(GAMES), ln -sf $(CURDIR)/$(LIB)/ressources $(CURDIR)/ressources/$(LIB);)
-	echo "Linking game lib ressources folder to root ressources folder"
+	@echo "Linking game lib ressources folder to root ressources folder"
 	ln -sf $(CURDIR)/ressources ../ressources/games
 
 $(GAMES):
