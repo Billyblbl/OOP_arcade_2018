@@ -22,15 +22,6 @@ class Core {
 		Core(const std::string &path);
 		~Core() = default;
 
-		void	addGame(const std::string &path);
-		void	setGraphic(const std::string &path);
-		void	run();
-
-		typedef	LibHandler<IGame> GameHandler;
-		typedef	LibHandler<IGraphic> GraphicHandler;
-		typedef std::vector<GameHandler> GameVector;
-		typedef std::unique_ptr<GraphicHandler>	GHandlerPtr;
-
 		typedef std::chrono::high_resolution_clock Clock;
 
 		typedef	std::chrono::nanoseconds	Nano;
@@ -38,6 +29,18 @@ class Core {
 
 		template<typename T>
 		using TimePoint = std::chrono::time_point<Clock, T>;
+
+		void	addGame(const std::string &path);
+		void	setGraphic(const std::string &path);
+		bool	update(const TimePoint<Second> &start, TimePoint<Nano> &last);
+		void	run();
+
+		typedef	LibHandler<IGame> GameHandler;
+		typedef	LibHandler<IGraphic> GraphicHandler;
+		typedef std::vector<GameHandler> GameVector;
+		typedef std::unique_ptr<GraphicHandler>	GHandlerPtr;
+
+
 
 	protected:
 	private:
