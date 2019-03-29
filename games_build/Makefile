@@ -7,7 +7,8 @@
 
 export CPPFLAGS +=	-I$(CURDIR)/include
 
-GAMES	=
+GAMES	=	pacman\
+			nibbler
 
 LINKS	=	$(addprefix ../games/lib_arcade_, $(addsuffix .so, $(GAMES)))\
 			$(addprefix $(CURDIR)/ressources/, $(GAMES))\
