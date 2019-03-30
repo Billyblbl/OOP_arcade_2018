@@ -79,6 +79,8 @@ class MainMenu : public IGame {
 
 		void	endSelect();
 
+		typedef std::function<void ()>	Action;
+
 	protected:
 	private:
 
