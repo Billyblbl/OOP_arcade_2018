@@ -9,9 +9,6 @@
 #include <string.h>
 #include "Core.hpp"
 
-//debug
-#include <thread>
-
 Core::Core(const std::string &path):
 	_screen(new GraphicHandler(path)),
 	_games({}),
@@ -44,11 +41,11 @@ bool	Core::update(const TimePoint<Second> &start, TimePoint<Nano> &last)
 {
 	IGame		&game = getCurrentGame();
 	IGraphic	&screen = getScreen();
-	screen.clear();
 	if (screen.hasInput()) {
 		//handle core specific keybinds here
 		game.handleKey(screen.getInput());
 	}
+	screen.clear();
 	TimePoint<Nano>		now(Clock::now());
 	TimePoint<Second>	secNow(std::chrono::time_point_cast<Second>(now));
 	bool	runGame = game.update(now - last, secNow - start);

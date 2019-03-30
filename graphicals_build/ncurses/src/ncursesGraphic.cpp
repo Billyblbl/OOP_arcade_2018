@@ -8,8 +8,7 @@
 #include    "ncursesGraphic.hpp"
 #include	"ncursesDisplayable.hpp"
 #include	"IGame.hpp"
-//debug
-#include    <thread>
+
 extern "C" {
 
 	ncursesGraphic	*CreateHandler()
@@ -82,14 +81,14 @@ bool	ncursesGraphic::update() {
 	getmaxyx(win, y, x);
 	if (x < size.x || y < size.y) {
 		wclear(win);
-		mvwprintw(win, 0, 0, "window too small");
+		mvwprintw(win, 0, 0, "window is too small");
 	}
 	wrefresh(win);
 	return true;
 }
 
 void	ncursesGraphic::clear() {
-	std::this_thread::sleep_for(std::chrono::milliseconds{30});
+	//std::this_thread::sleep_for(std::chrono::milliseconds{30});
 	wclear(win);
 }
 
