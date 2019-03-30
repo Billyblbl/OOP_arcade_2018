@@ -7,18 +7,22 @@
 
 #include "MainMenu.hpp"
 
+//debug
+#include <iostream>
+
 MainMenu::MainMenu(IGraphic &handler):
 	_gameList("./games", "./games/lib_arcade_", ".so"),
 	_glibList("./lib", "./lib/lib_arcade_", ".so"),
 	_screen(&handler),
+	_boardSize("[50,20]"),
 	_gameCursor(_gameList,
 				_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"),
 				Position2F({0.0f, 0.0f})),
 	_glibCursor(_glibList,
 				_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"),
-				Position2F({50.0f, 0.0f}))
+				Position2F({static_cast<float>(_boardSize.x / 2), 0.0f}))
 {
-	_screen->setSize(100, 100);
+	_screen->setSize(_boardSize.x, _boardSize.y);
 	_keyBinds[KeyCode::arrowUp] = [this](){--this->_gameCursor;};
 	_keyBinds[KeyCode::arrowDown] = [this](){++this->_gameCursor;};
 	_keyBinds[KeyCode::pageUp] = [this](){--this->_glibCursor;};
@@ -30,10 +34,12 @@ MainMenu::MainMenu(IGraphic &handler):
 
 bool	MainMenu::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime)
 {
-	for (unsigned short i = 0; i < _gameList.length() && i <= 50; i++)
+	for (unsigned short i = 0; i < _gameList.length() && i <= _boardSize.y / 2; i++) {
 		_screen->write(2, i, _gameList[i].name);
-	for (unsigned short i = 0; i < _glibList.length() && i <= 50; i++)
-		_screen->write(52, i, _glibList[i].name);
+	}
+	for (unsigned short i = 0; i < _glibList.length() && i <= _boardSize.y / 2; i++) {
+		_screen->write(27, i, _glibList[i].name);
+	}
 	_screen->setEntity(_gameCursor.getPos().x, _gameCursor.getPos().y, _gameCursor);
 	_screen->setEntity(_glibCursor.getPos().x, _glibCursor.getPos().y, _glibCursor);
 	return true;
