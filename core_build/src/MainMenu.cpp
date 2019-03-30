@@ -64,13 +64,12 @@ void	MainMenu::refresh()
 	_gameCursor = _gameList.begin();
 	_glibCursor = _glibList.begin();
 	_gameCursor.setPos({0.0, 0.0});
-	_glibCursor.setPos({50.0, 0.0});
-	// std::cout << __func__ << std::endl;
+	_glibCursor.setPos({static_cast<float>(_boardSize.x / 2), 0.0});
 }
 
 void	MainMenu::onEnable()
 {
-	_screen->setSize(100, 100);
+	_screen->setSize(_boardSize.x, _boardSize.y);
 	refresh();
 }
 

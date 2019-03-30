@@ -5,7 +5,6 @@
 ** arcade core class methods
 */
 
-#include <iostream>
 #include <string.h>
 #include "Core.hpp"
 
@@ -30,7 +29,6 @@ void	Core::addGame(const std::string &path)
 
 void	Core::setGraphic(const std::string &path)
 {
-	std::cout << __func__ << std::endl;
 	getCurrentGame().onDisable();
 	GraphicHandler	*newHandler = new GraphicHandler(path);
 	_mainMenu.setGraphic(*newHandler);
@@ -48,9 +46,9 @@ bool	Core::update(const TimePoint<Second> &start, TimePoint<Nano> &last)
 		//handle core specific keybinds here
 		game.handleKey(screen.getInput());
 	}
-	screen.clear();
 	TimePoint<Nano>		now(Clock::now());
 	TimePoint<Second>	secNow(std::chrono::time_point_cast<Second>(now));
+	screen.clear();
 	bool	runGame = game.update(now - last, secNow - start);
 	bool	runArcade = screen.update();
 	last = now;
