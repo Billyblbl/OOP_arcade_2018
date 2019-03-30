@@ -8,7 +8,8 @@
 #include    "ncursesGraphic.hpp"
 #include	"ncursesDisplayable.hpp"
 #include	"IGame.hpp"
-
+//debug
+#include    <thread>
 extern "C" {
 
 	ncursesGraphic	*CreateHandler()
@@ -33,16 +34,14 @@ ncursesGraphic::ncursesGraphic() {
     initscr();
 	cbreak();
 	noecho();
-	scrollok(win, TRUE);
-	nodelay(win, TRUE);
 	if (has_colors() == TRUE)
 		start_color();
     win = newwin(0, 0, 0, 0);
+	nodelay(win, TRUE);
 }
 
 ncursesGraphic::~ncursesGraphic() {
 	nodelay(win, FALSE);
-	scrollok(win, FALSE);
 	echo();
 	nocbreak();
 	delwin(win);
@@ -53,16 +52,16 @@ void	ncursesGraphic::setEntity(float x, float y, IDisplayable &entity) {
 	const ncursesState &state = nentity.getStateData();
 	char	str[2] = {state.ascii, '\0'};
 	if (has_colors() == TRUE) {
-		init_color(COLOR_WHITE, state.foreground.r, state.foreground.g, state.foreground.b);
+	 	init_color(COLOR_WHITE, state.foreground.r, state.foreground.g, state.foreground.b);
 		init_color(COLOR_BLACK, state.background.r, state.background.g, state.background.b);
-		init_pair(1, COLOR_WHITE, COLOR_BLACK);
-		wattron(win, COLOR_PAIR(1));
+	 	init_pair(1, COLOR_WHITE, COLOR_BLACK);
+	 	wattron(win, COLOR_PAIR(1));
 	}
 	mvwprintw(win, y, x, str);
 	if (has_colors() == TRUE) {
-		wattroff(win, COLOR_PAIR(1));
+	 	wattroff(win, COLOR_PAIR(1));
 		init_color(COLOR_WHITE, 1000, 1000, 1000);
-		init_color(COLOR_BLACK, 0, 0, 0);
+	 	init_color(COLOR_BLACK, 0, 0, 0);
 	}
 }
 
@@ -81,8 +80,6 @@ bool	ncursesGraphic::update() {
 	int y;
 
 	getmaxyx(win, y, x);
-	std::cerr << "x=" << x <<std::endl;
-	std::cerr << "y=" << y <<std::endl;
 	if (x < size.x || y < size.y) {
 		wclear(win);
 		mvwprintw(win, 0, 0, "window too small");
@@ -92,6 +89,7 @@ bool	ncursesGraphic::update() {
 }
 
 void	ncursesGraphic::clear() {
+	std::this_thread::sleep_for(std::chrono::milliseconds{30});
 	wclear(win);
 }
 
