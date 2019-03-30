@@ -53,6 +53,8 @@ class Anima : public IDisplayable {
 		typedef std::vector<std::string>				KeyList;
 		typedef	std::unordered_map<std::string, State>	StateMap;
 
+		const State			&getStateData() const;
+
 	protected:
 		virtual void		onStateChange(const State &newState) = 0;
 		std::string			_spritePath;
@@ -160,6 +162,12 @@ IDisplayable	&Anima<State>::operator--()
 	_currentState = _states.find(*_currentStateName);
 	onStateChange(_currentState->second);
 	return *this;
+}
+
+template<class State>
+const State			&Anima<State>::getStateData() const
+{
+	return *_currentState;
 }
 
 #endif /* !ANIMA_HPP_ */
