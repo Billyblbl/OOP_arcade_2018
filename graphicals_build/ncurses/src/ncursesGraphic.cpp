@@ -40,6 +40,8 @@ ncursesGraphic::ncursesGraphic() {
 }
 
 ncursesGraphic::~ncursesGraphic() {
+	wclear(win);
+	wrefresh(win);
 	nodelay(win, FALSE);
 	echo();
 	nocbreak();
