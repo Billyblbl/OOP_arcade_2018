@@ -10,6 +10,7 @@
 
 	#include <string>
 	#include <cstdint>
+	#include <stdexcept>
 
 template<typename nb>
 struct Vector2 {

@@ -13,6 +13,7 @@
 	#include <vector>
 	#include <fstream>
 	#include <sstream>
+	#include <algorithm>
 	#include "IDisplayable.hpp"
 	#include "Types.hpp"
 
@@ -88,6 +89,7 @@ Anima<State>::Anima(const std::string &path):
 			_states[data.name] = data;
 		}
 	}
+	_currentState = _states.begin();
 }
 
 template<class State>
@@ -167,7 +169,7 @@ IDisplayable	&Anima<State>::operator--()
 template<class State>
 const State			&Anima<State>::getStateData() const
 {
-	return *_currentState;
+	return _currentState->second;
 }
 
 #endif /* !ANIMA_HPP_ */
