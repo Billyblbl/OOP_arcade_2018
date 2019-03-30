@@ -11,6 +11,7 @@
 	#include <memory>
 	#include "IGame.hpp"
 	#include "DirectoryMenu.hpp"
+	#include "Types.hpp"
 
 class MainMenu : public IGame {
 	public:
@@ -89,6 +90,7 @@ class MainMenu : public IGame {
 		DirectoryMenu	_gameList;
 		DirectoryMenu	_glibList;
 		IGraphic		*_screen;
+		Vector2<int>	_boardSize;
 		Cursor			_gameCursor;
 		Cursor			_glibCursor;
 

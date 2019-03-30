@@ -101,20 +101,20 @@ SFMLGraphic::SFMLGraphic(unsigned width, unsigned height):
 void            SFMLGraphic::setEntity(float x, float y, IDisplayable &entity)
 {
 	SFMLArcadeEntity	&asEntity = dynamic_cast<SFMLArcadeEntity &>(entity);
-	const sf::Vector2u	&dimensions = asEntity.getDimensions();
-	_toDraw.emplace(asEntity.getDrawable(), asEntity.getTransformable(),
-		sf::Vector2f(_cellDimensions.x / dimensions.x, _cellDimensions.y / dimensions.y),
-		sf::Vector2f(x * _cellDimensions.x, y * _cellDimensions.y));
+	sf::Vector2u	dimensions = asEntity.getDimensions();
+	asEntity.getTransformable().setScale(_cellDimensions.x / dimensions.x, _cellDimensions.y / dimensions.y);
+	asEntity.getTransformable().setPosition(x * _cellDimensions.x, y * _cellDimensions.y);
+	_window.draw(asEntity.getDrawable());
 }
 
 void            SFMLGraphic::write(int x, int y, const std::string &text)
 {
-	sf::Text	&textEntity = _texts.emplace_back(text, _font);
+	sf::Text	textEntity(text, _font);
 	textEntity.setFillColor(sf::Color::White);
 	sf::Vector2u	dimensions(textEntity.getLocalBounds().width, textEntity.getLocalBounds().height);
-	_toDraw.emplace(static_cast<sf::Drawable &>(textEntity), static_cast<sf::Transformable &>(textEntity),
-		sf::Vector2f(_cellDimensions.x * text.length() / dimensions.x, _cellDimensions.y / dimensions.y),
-		sf::Vector2f(x * _cellDimensions.x, y * _cellDimensions.y));
+	textEntity.setScale(_cellDimensions.x * text.length() / dimensions.x, _cellDimensions.y / dimensions.y);
+	textEntity.setPosition(x * _cellDimensions.x, y * _cellDimensions.y);
+	_window.draw(textEntity);
 }
 
 void            SFMLGraphic::setSize(int x, int y)
@@ -139,21 +139,13 @@ bool            SFMLGraphic::update()
 			_majInput = ev.key.shift;
 		}
 	}
-	_window.clear();
-	while (!_toDraw.empty()) {
-		_toDraw.front().draw(_window);
-		_toDraw.pop();
-	}
 	_window.display();
-	_texts.clear();
 	return _window.isOpen();
 }
 
 void            SFMLGraphic::clear()
 {
-	while(!_toDraw.empty())
-		_toDraw.pop();
-	_texts.clear();
+	_window.clear();
 }
 
 IDisplayable    *SFMLGraphic::createDisplayable(const std::string &name)
