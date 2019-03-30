@@ -18,11 +18,11 @@ MainMenu::MainMenu(IGraphic &handler):
 				_screen->createDisplayable("./ressources/core/entities/menu.cursor.entity"),
 				Position2F({50.0f, 0.0f}))
 {
-	_screen->setSize(100, 100);
+	_screen->setSize(50, 20);
 	_keyBinds[KeyCode::arrowUp] = [this](){--this->_gameCursor;};
 	_keyBinds[KeyCode::arrowDown] = [this](){++this->_gameCursor;};
-	_keyBinds[KeyCode::pageUp] = [this](){--this->_glibCursor;};
-	_keyBinds[KeyCode::pageDown] = [this](){++this->_glibCursor;};
+	_keyBinds[/* KeyCode::pageUp */'a'] = [this](){--this->_glibCursor;};
+	_keyBinds[/* KeyCode::pageDown */'z'] = [this](){++this->_glibCursor;};
 	_keyBinds['r'] = [this](){this->refresh();};
 	_keyBinds['\n'] = [this](){this->_gameCursor.select();};
 	_keyBinds['g'] = [this](){this->_glibCursor.select();};

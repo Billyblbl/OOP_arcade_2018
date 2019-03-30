@@ -13,8 +13,8 @@
 class   ncurseDisplayable : public Anima<ncursesState> {
 public:
     ncurseDisplayable(const std::string &path);
-    ~ncurseDisplayable() = default;
-    void    onStateChange(const ncursesState &newState) override;
+    ~ncurseDisplayable();
+
 };
 
 #endif /* !NCURSESDISPLAYABLE_HPP_ */

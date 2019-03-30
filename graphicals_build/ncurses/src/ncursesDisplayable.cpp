@@ -7,10 +7,13 @@
 
 #include "ncursesDisplayable.hpp"
 
+//debug
+// #include <iostream>
+
 ncurseDisplayable::ncurseDisplayable(const std::string &path):
     Anima<ncursesState>(path)
-{}
-
-void    onStateChange(const ncursesState &newState) {
-    (void)newState;
+{
+    setState(0);
 }
+
+ncurseDisplayable::~ncurseDisplayable() {}

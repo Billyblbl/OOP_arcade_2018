@@ -19,6 +19,7 @@ public:
 					   Color dataColor,
 					   Color dataBackColor,
 					   char dataAscii);
+    ~ncursesState() = default;
     ncursesState &operator=(const ncursesState &tocopy);
     struct nColor {
     short   r;

@@ -57,7 +57,7 @@ class Anima : public IDisplayable {
 		const State			&getStateData() const;
 
 	protected:
-		virtual void		onStateChange(const State &newState) = 0;
+		virtual void		onStateChange(const State &newState);
 		std::string			_spritePath;
 	private:
 
@@ -170,6 +170,12 @@ template<class State>
 const State			&Anima<State>::getStateData() const
 {
 	return _currentState->second;
+}
+
+template<class State>
+void				Anima<State>::onStateChange(const State &newState)
+{
+	(void)newState;
 }
 
 #endif /* !ANIMA_HPP_ */

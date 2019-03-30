@@ -33,6 +33,7 @@ ncursesGraphic::ncursesGraphic() {
     initscr();
 	cbreak();
 	noecho();
+	scrollok(win, TRUE);
 	nodelay(win, TRUE);
 	if (has_colors() == TRUE)
 		start_color();
@@ -41,10 +42,12 @@ ncursesGraphic::ncursesGraphic() {
 
 ncursesGraphic::~ncursesGraphic() {
 	nodelay(win, FALSE);
+	scrollok(win, FALSE);
 	echo();
 	nocbreak();
 	delwin(win);
 }
+
 void	ncursesGraphic::setEntity(float x, float y, IDisplayable &entity) {
 	ncurseDisplayable	&nentity =  static_cast<ncurseDisplayable &>(entity);
 	const ncursesState &state = nentity.getStateData();
@@ -55,7 +58,7 @@ void	ncursesGraphic::setEntity(float x, float y, IDisplayable &entity) {
 		init_pair(1, COLOR_WHITE, COLOR_BLACK);
 		wattron(win, COLOR_PAIR(1));
 	}
-	mvwprintw(win, x, y, str);
+	mvwprintw(win, y, x, str);
 	if (has_colors() == TRUE) {
 		wattroff(win, COLOR_PAIR(1));
 		init_color(COLOR_WHITE, 1000, 1000, 1000);
@@ -65,7 +68,7 @@ void	ncursesGraphic::setEntity(float x, float y, IDisplayable &entity) {
 
 void    ncursesGraphic::write(int x, int y, const std::string &text) {
 	//verifier que le fond est bien NWAR comme alex
-    mvwprintw(win, x, y, text.c_str());
+    mvwprintw(win, y, x, text.c_str());
 }
 
 void    ncursesGraphic::setSize(int x, int y) {
@@ -78,6 +81,8 @@ bool	ncursesGraphic::update() {
 	int y;
 
 	getmaxyx(win, y, x);
+	std::cerr << "x=" << x <<std::endl;
+	std::cerr << "y=" << y <<std::endl;
 	if (x < size.x || y < size.y) {
 		wclear(win);
 		mvwprintw(win, 0, 0, "window too small");
@@ -101,7 +106,7 @@ bool	ncursesGraphic::hasInput() {
 
 int32_t	ncursesGraphic::getInput() {
 	auto it = Translator.find(input);
-	if (it == Translator.end())
+	if (it != Translator.end())
 		return Translator.at(input);
 	return input;
 }
