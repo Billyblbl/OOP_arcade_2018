@@ -39,6 +39,8 @@ bool Snake::checkPosFood()
         if ((_snake[i].x == _food.x) && (_snake[i].y == _food.y))
             return false;
     }
+    if ((_food.x > _map.x) || (_food.y > _map.y))
+        return false;
     return true;
 }
 
@@ -138,7 +140,7 @@ void Snake::display()
         snake_tail.push_back(_screen->createDisplayable("./ressources/games/nibbler/entity/snakeTail.entity"));
     _screen->write(0, _map.y + 2, "Score : ");
     _screen->write(9, _map.y + 2, std::to_string(_score));
-    for (int i = 0; i < 30; i++)
+    for (int i = 0; i < _map.x; i++)
         _screen->write(_map.x + 1, i, "*");
 
     _screen->setEntity(_food.x, _food.y, *fruit);
