@@ -26,6 +26,8 @@ Pacman::Pacman()
     _powerUp = false;
     _life = 3;
 
+    for (int i = 0; i < 4; i++)
+        _ghost.push_back({8.0f + i, 8, NONE, nullptr});
     _ghost[0].DIR = UP;
     _ghost[1].DIR = RIGHT;
     _ghost[2].DIR = DOWN;
@@ -47,8 +49,10 @@ void Pacman::setGraphic(IGraphic &handler)
             delete _ghost[i].disp;
     }
     _pacman.disp = _screen->createDisplayable("./ressources/games/pacman/entity/pacman.entity");
-    for (int i = 0; i < 4; i++)
-        _ghost.push_back({8.0f + i, 8, NONE, _screen->createDisplayable("./ressources/games/pacman/entity/ghost.entity")});
+    _ghost[0].disp = _screen->createDisplayable("./ressources/games/pacman/entity/ghost.entity");
+    _ghost[1].disp = _screen->createDisplayable("./ressources/games/pacman/entity/ghost.entity");
+    _ghost[2].disp = _screen->createDisplayable("./ressources/games/pacman/entity/ghost.entity");
+    _ghost[3].disp = _screen->createDisplayable("./ressources/games/pacman/entity/ghost.entity");
     _wall = _screen->createDisplayable("./ressources/games/pacman/entity/wall.entity");
     _pacBall = _screen->createDisplayable("./ressources/games/pacman/entity/pacBall.entity");
     _pacTicTac = _screen->createDisplayable("./ressources/games/pacman/entity/pacTicTac.entity");}
