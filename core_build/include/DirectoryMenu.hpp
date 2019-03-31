@@ -21,6 +21,7 @@
 	#   elif !defined(__has_include)
 	#       define INCLUDE_STD_FILESYSTEM_EXPERIMENTAL 1
 	#   elif __has_include(<filesystem>)
+	#		define INCLUDE_STD_FILESYSTEM_EXPERIMENTAL 0
 	#   elif __has_include(<experimental/filesystem>)
 	#       define INCLUDE_STD_FILESYSTEM_EXPERIMENTAL 1
 	#   else
