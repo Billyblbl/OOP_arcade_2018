@@ -5,7 +5,6 @@
 ** arcade directory menu object method
 */
 
-#include <filesystem>
 #include "DirectoryMenu.hpp"
 
 DirectoryMenu::DirectoryMenu(const std::string &dir,
@@ -24,7 +23,11 @@ void	DirectoryMenu::refresh()
 	_entries.clear();
 	using dirIterator = std::filesystem::directory_iterator;
 		for (const auto & entry : dirIterator(_dir)) {
+#if INCLUDE_STD_FILESYSTEM_EXPERIMENTAL
+		if (std::filesystem::is_regular_file(entry.path()))
+#else
 		if (entry.is_regular_file())
+#endif
 			_entries.emplace_back(entry.path(), _prefix, _suffix);
 	}
 }
