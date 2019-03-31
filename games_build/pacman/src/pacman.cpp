@@ -303,3 +303,10 @@ bool Pacman::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime
     Pacman::display();
     return true;
 }
+
+extern "C" {
+    IGame *CreateHandler()
+    {
+        return new Pacman;
+    }
+}
