@@ -204,7 +204,6 @@ void Snake::onDisable()
 {
 }
 
-
 extern "C" {
     IGame *CreateHandler()
     {
