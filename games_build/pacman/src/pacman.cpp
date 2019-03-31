@@ -27,7 +27,7 @@ Pacman::Pacman()
     _life = 3;
 
     for (int i = 0; i < 4; i++)
-        _ghost.push_back({7.0f + i, 8, NONE, nullptr});
+        _ghost.push_back({8.0f + i, 7, NONE, nullptr});
     _ghost[0].DIR = UP;
     _ghost[1].DIR = RIGHT;
     _ghost[2].DIR = DOWN;
@@ -99,20 +99,24 @@ void Pacman::moovement(position current)
     && (_map[current.y + 1][current.x] != '*'))
         current.y += 1;
     else
-        current.y -= 1;
+        current.x -= 1;
 }
 
 void Pacman::resetPosition()
 {
-    _pacman.x = 10;
-    _pacman.y = 16;
+    _pacman.x = 9;
+    _pacman.y = 15;
     _pacman.DIR = NONE;
 
     for (unsigned int i = 0; i < _ghost.size(); i++) {
         _ghost[i].x = 8 + i;
-        _ghost[i].y = 8;
+        _ghost[i].y = 7;
         _ghost[i].DIR = NONE;
     }
+    _ghost[0].DIR = UP;
+    _ghost[1].DIR = RIGHT;
+    _ghost[2].DIR = DOWN;
+    _ghost[3].DIR = LEFT;
 }
 
 void Pacman::ghostCollision()
@@ -121,7 +125,7 @@ void Pacman::ghostCollision()
         if ((_powerUp == true) && (_pacman.x == _ghost[i].x)
         && (_pacman.y == _ghost[i].y)) {
             _score += 200;
-            _ghost[i].y = 8;
+            _ghost[i].y = 7;
             _ghost[i].x = 10;
         }
         if ((_powerUp == false) && (_pacman.x == _ghost[i].x)
@@ -270,11 +274,11 @@ void Pacman::printMap(std::string s, unsigned int y)
 {
     for (unsigned int i = 0; s[i]; i++) {
         if (s[i] == '*')
-            _screen->setEntity(y, i, *_wall);
+            _screen->setEntity(i, y, *_wall);
         if (s[i] == '.')
-            _screen->setEntity(y, i, *_pacBall);
+            _screen->setEntity(i, y, *_pacBall);
         if (s[i] == '0')
-            _screen->setEntity(y, i, *_pacTicTac);
+            _screen->setEntity(i, y, *_pacTicTac);
     }
 }
 
@@ -283,8 +287,8 @@ void Pacman::display()
     for (unsigned int i = 0; i < _map.size(); i++)
         Pacman::printMap(_map[i], i);
     for (unsigned int i = 0; i < _ghost.size(); i++)
-        _screen->setEntity(_ghost[i].y, _ghost[i].x, *_ghost[i].disp);
-    _screen->setEntity(_pacman.y, _pacman.x, *_pacman.disp);
+        _screen->setEntity(_ghost[i].x, _ghost[i].y, *_ghost[i].disp);
+    _screen->setEntity(_pacman.x, _pacman.y, *_pacman.disp);
     _screen->write(0, 22, "Score : ");
     _screen->write(9, 22, std::to_string(_score));
 }
