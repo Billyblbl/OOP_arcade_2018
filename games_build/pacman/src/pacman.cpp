@@ -18,7 +18,8 @@ void Pacman::fillMap(std::string s)
         _map.push_back(buf);
 }
 
-Pacman::Pacman()
+Pacman::Pacman():
+    _screen(nullptr)
 {
     _pacman.DIR = NONE;
     _pacman.x = 9;
