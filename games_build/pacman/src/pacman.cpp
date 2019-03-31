@@ -21,13 +21,13 @@ void Pacman::fillMap(std::string s)
 Pacman::Pacman()
 {
     _pacman.DIR = NONE;
-    _pacman.x = 10;
-    _pacman.y = 16;
+    _pacman.x = 9;
+    _pacman.y = 15;
     _powerUp = false;
     _life = 3;
 
     for (int i = 0; i < 4; i++)
-        _ghost.push_back({8.0f + i, 8, NONE, nullptr});
+        _ghost.push_back({7.0f + i, 8, NONE, nullptr});
     _ghost[0].DIR = UP;
     _ghost[1].DIR = RIGHT;
     _ghost[2].DIR = DOWN;
