@@ -7,6 +7,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <iostream>
+#include <thread>
 #include "pacman.hpp"
 
 
@@ -18,16 +20,17 @@ void Pacman::fillMap(std::string s)
         _map.push_back(buf);
 }
 
-Pacman::Pacman()
+Pacman::Pacman():
+    _screen(nullptr)
 {
     _pacman.DIR = NONE;
-    _pacman.x = 9;
-    _pacman.y = 15;
+    _pacman.x = 15;
+    _pacman.y = 9;
     _powerUp = false;
     _life = 3;
 
     for (int i = 0; i < 4; i++)
-        _ghost.push_back({8.0f + i, 7, NONE, nullptr});
+        _ghost.push_back({8.0f + i, 8.0 + i, NONE, nullptr});
     _ghost[0].DIR = UP;
     _ghost[1].DIR = RIGHT;
     _ghost[2].DIR = DOWN;
@@ -71,16 +74,16 @@ void Pacman::handleKey(int32_t key)
 {
     switch (key) {
         case arrowUp:
-            _pacman.DIR = UP;
+            _pacman.DIR = LEFT;
             break;
         case arrowRight:
-            _pacman.DIR = RIGHT;
-            break;
-        case arrowDown:
             _pacman.DIR = DOWN;
             break;
+        case arrowDown:
+            _pacman.DIR = RIGHT;
+            break;
         case arrowLeft:
-            _pacman.DIR = LEFT;
+            _pacman.DIR = UP;
             break;
         default:
             break;
@@ -89,23 +92,33 @@ void Pacman::handleKey(int32_t key)
 
 void Pacman::moovement(position current)
 {
-    if ((current.DIR == UP)
-    && (_map[current.y - 1][current.x] != '*'))
-        current.y -= 1;
-    else if ((current.DIR == RIGHT)
-    && (_map[current.y][current.x + 1] != '*'))
-        current.x += 1;
-    else if ((current.DIR == DOWN)
-    && (_map[current.y + 1][current.x] != '*'))
-        current.y += 1;
-    else
-        current.x -= 1;
+    (void)current;
+    if ((_pacman.DIR == UP)
+    && ((_map[_pacman.x][_pacman.y - 1] == ' ')
+    || (_map[_pacman.x][_pacman.y - 1] == '.')
+    || (_map[_pacman.x][_pacman.y - 1] == '0')))
+        _pacman.y -= 1;
+    else if ((_pacman.DIR == RIGHT)
+    && ((_map[_pacman.x + 1][_pacman.y] == ' ')
+    || (_map[_pacman.x + 1][_pacman.y] == '.')
+    || (_map[_pacman.x + 1][_pacman.y] == '0')))
+        _pacman.x += 1;
+    else if ((_pacman.DIR == DOWN)
+    && ((_map[_pacman.x][_pacman.y + 1] == ' ')
+    || (_map[_pacman.x][_pacman.y + 1] == '.')
+    || (_map[_pacman.x][_pacman.y + 1] == '0')))
+        _pacman.y += 1;
+    else if ((_pacman.DIR == LEFT)
+    && ((_map[_pacman.x - 1][_pacman.y] == ' ')
+    || (_map[_pacman.x - 1][_pacman.y] == '.')
+    || (_map[_pacman.x - 1][_pacman.y] == '0')))
+        _pacman.x -= 1;
 }
 
 void Pacman::resetPosition()
 {
-    _pacman.x = 9;
-    _pacman.y = 15;
+    _pacman.x = 15;
+    _pacman.y = 9;
     _pacman.DIR = NONE;
 
     for (unsigned int i = 0; i < _ghost.size(); i++) {
@@ -122,13 +135,13 @@ void Pacman::resetPosition()
 void Pacman::ghostCollision()
 {
     for (unsigned int i = 0; i < _ghost.size(); i++) {
-        if ((_powerUp == true) && (_pacman.x == _ghost[i].x)
+        if ((_powerUp == true) && (_pacman.x + 1 == _ghost[i].x)
         && (_pacman.y == _ghost[i].y)) {
             _score += 200;
             _ghost[i].y = 7;
             _ghost[i].x = 10;
         }
-        if ((_powerUp == false) && (_pacman.x == _ghost[i].x)
+        if ((_powerUp == false) && (_pacman.x + 1 == _ghost[i].x)
         && (_pacman.y == _ghost[i].y)) {
             _life -= 1;
             Pacman::resetPosition();
@@ -138,11 +151,14 @@ void Pacman::ghostCollision()
 
 void Pacman::scoring()
 {
-    if (_map[_pacman.y][_pacman.x] == '.')
+    if (_map[_pacman.x][_pacman.y] == '.') {
         _score += 10;
-    if (_map[_pacman.y][_pacman.x] == '0') {
+        _map[_pacman.x][_pacman.y] = ' ';
+    }
+    if (_map[_pacman.x][_pacman.y] == '0') {
         _score += 100;
         _powerUp = true;
+        _map[_pacman.x][_pacman.y] = ' ';
         _timePowerUp = std::chrono::nanoseconds(0);
     }
 }
@@ -288,7 +304,7 @@ void Pacman::display()
         Pacman::printMap(_map[i], i);
     for (unsigned int i = 0; i < _ghost.size(); i++)
         _screen->setEntity(_ghost[i].x, _ghost[i].y, *_ghost[i].disp);
-    _screen->setEntity(_pacman.x, _pacman.y, *_pacman.disp);
+    _screen->setEntity(_pacman.y, _pacman.x, *_pacman.disp);
     _screen->write(0, 22, "Score : ");
     _screen->write(9, 22, std::to_string(_score));
 }
@@ -314,6 +330,7 @@ bool Pacman::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime
     }
     if (_life == 0)
         return false;
+    std::this_thread::sleep_for(std::chrono::milliseconds(120));
     Pacman::display();
     return true;
 }
