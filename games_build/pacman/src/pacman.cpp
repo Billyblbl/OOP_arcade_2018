@@ -40,9 +40,9 @@ void Pacman::setGraphic(IGraphic &handler)
     _screen = &handler;
     if (_screen) {
         delete _pacman.disp;
-        delete _wall.disp;
-        delete _pacBall.disp;
-        delete _pacTicTac.disp;
+        delete _wall;
+        delete _pacBall;
+        delete _pacTicTac;
         for (unsigned int i = 0; _ghost.size(); i++)
             delete _ghost[i].disp;
     }
