@@ -23,20 +23,13 @@ Pacman::Pacman()
     _pacman.DIR = NONE;
     _pacman.x = 10;
     _pacman.y = 16;
-    _pacman.disp = _screen->createDisplayable("./ressources/games/pacman/entity/pacman.entity");
     _powerUp = false;
     _life = 3;
 
-    for (int i = 0; i < 4; i++)
-        _ghost.push_back({8.0f + i, 8, NONE, _screen->createDisplayable("./ressources/games/pacman/entity/ghost.entity")});
     _ghost[0].DIR = UP;
     _ghost[1].DIR = RIGHT;
     _ghost[2].DIR = DOWN;
     _ghost[3].DIR = LEFT;
-
-    _wall = _screen->createDisplayable("./ressources/games/pacman/entity/wall.entity");
-    _pacBall = _screen->createDisplayable("./ressources/games/pacman/entity/pacBall.entity");
-    _pacTicTac = _screen->createDisplayable("./ressources/games/pacman/entity/pacTicTac.entity");
 
     fillMap("./ressources/games/pacman/map/map.txt");
     _score = 0;
@@ -45,7 +38,20 @@ Pacman::Pacman()
 void Pacman::setGraphic(IGraphic &handler)
 {
     _screen = &handler;
-}
+    if (_screen) {
+        delete _pacman.disp;
+        delete _wall.disp;
+        delete _pacBall.disp;
+        delete _pacTicTac.disp;
+        for (unsigned int i = 0; _ghost.size(); i++)
+            delete _ghost[i].disp;
+    }
+    _pacman.disp = _screen->createDisplayable("./ressources/games/pacman/entity/pacman.entity");
+    for (int i = 0; i < 4; i++)
+        _ghost.push_back({8.0f + i, 8, NONE, _screen->createDisplayable("./ressources/games/pacman/entity/ghost.entity")});
+    _wall = _screen->createDisplayable("./ressources/games/pacman/entity/wall.entity");
+    _pacBall = _screen->createDisplayable("./ressources/games/pacman/entity/pacBall.entity");
+    _pacTicTac = _screen->createDisplayable("./ressources/games/pacman/entity/pacTicTac.entity");}
 
 void Pacman::onEnable()
 {
