@@ -7,7 +7,7 @@
 
 export CPPFLAGS +=	-I$(CURDIR)/include
 
-LIBS	= sfml ncurses
+LIBS	= sfml ncurses sdl2
 
 LINKS	=	$(addprefix ../lib/lib_arcade_, $(addsuffix .so, $(LIBS))) \
 			$(addprefix $(CURDIR)/ressources/, $(LIBS)) \
