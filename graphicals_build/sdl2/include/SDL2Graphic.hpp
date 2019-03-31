@@ -30,20 +30,27 @@ class SDL2Graphic : public IGraphic {
 
 	typedef	std::unordered_map<SDL_Keycode, int32_t>	Translations;
 
-	static TTF_Font	&getFont();
+
+	static TTF_Font		&getFont();
+	static SDL_Renderer	&getRenderer();
 
 	protected:
 	private:
 
+	//will throw by design
+	void	cancel(bool cancels[3], const std::string &func);
+	void	cancel(bool cancel1, bool cancel2, bool cancel3, const std::string &func);
+
 	bool				_continue;
 	bool				_hasInput;
 	bool				_majInput;
-	static TTF_Font*	_font;
+
+	static TTF_Font		*_font;
 
 	SDL_Keycode		_input;
 
-	SDL_Window		*_win;
-	SDL_Surface		*_surface;
+	SDL_Window			*_win;
+	static SDL_Renderer	*_renderer;
 
 	Vector2<unsigned>	_windowDimensions;
 	Vector2<unsigned>	_boardDimensions;
@@ -51,7 +58,6 @@ class SDL2Graphic : public IGraphic {
 
 	static const Translations	Translator;
 	static const Translations	MajTranslator;
-
 
 };
 

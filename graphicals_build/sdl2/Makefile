@@ -9,6 +9,7 @@ LIB	=	lib_arcade_sdl2.so
 
 SRC	=	./src/SDL2Graphic.cpp\
 		./src/SDL2Sprite.cpp\
+		./src/SDL2Sprite.LoadableTexture.cpp\
 		./src/SDL2State.cpp\
 		./src/SDL2Character.cpp\
 		./src/SDL2CharState.cpp

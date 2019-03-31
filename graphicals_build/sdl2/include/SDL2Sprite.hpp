@@ -19,24 +19,16 @@ class SDL2Sprite : public Anima<SDL2State>/* , public SDL2Displayable */ {
 		SDL2Sprite(const std::string &path);
 		~SDL2Sprite() = default;
 
-		class LoadableSurface {
+		class LoadableTexture {
 			public:
-			LoadableSurface(const std::string &path) {
-				if (!(_surface = IMG_Load(path.c_str())))
-					throw std::runtime_error("SDL2 texture load : " + path);
-			}
+			LoadableTexture(const std::string &path);
 
-			~LoadableSurface() {
-				SDL_FreeSurface(_surface);
-			}
+			~LoadableTexture();
 
-			operator SDL_Surface &()
-			{
-				return *_surface;
-			}
+			operator SDL_Texture &();
 
 			private:
-				SDL_Surface	*_surface;
+				SDL_Texture	*_texture;
 		};
 
 		class SDL2Error : public std::runtime_error {
@@ -44,16 +36,16 @@ class SDL2Sprite : public Anima<SDL2State>/* , public SDL2Displayable */ {
 			SDL2Error(const std::string &what): std::runtime_error(what) {}
 		};
 
-		SDL_Surface	&getSurface()/* override */;
+		SDL_Texture	&getTexture();
 
 	// void	onStateChange(const SDL2State &newState) override;
 
 	protected:
 	private:
 
-		LoadableSurface					*_surface;
+		LoadableTexture					*_texture;
 
-		static	Cache<LoadableSurface>	SurfaceCache;
+		static	Cache<LoadableTexture>	TextureCache;
 };
 
 #endif /* !SDL2SPRITE_HPP_ */

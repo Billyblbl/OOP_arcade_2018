@@ -7,18 +7,18 @@
 
 #include "SDL2Sprite.hpp"
 
-Cache<SDL2Sprite::LoadableSurface>	SDL2Sprite::SurfaceCache;
+Cache<SDL2Sprite::LoadableTexture>	SDL2Sprite::TextureCache;
 
 SDL2Sprite::SDL2Sprite(const std::string &name):
 	Anima<SDL2State>(name)
 {
 	if (_spritePath == "undefined")
 		throw SDL2Error("Can't build SDL surface without texture file");
-	_surface = &SurfaceCache.get(_spritePath);
+	_texture = &TextureCache.get(_spritePath);
 	setState(0);
 }
 
-SDL_Surface	&SDL2Sprite::getSurface()
+SDL_Texture	&SDL2Sprite::getTexture()
 {
-	return *_surface;
+	return *_texture;
 }

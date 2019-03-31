@@ -12,19 +12,20 @@
 	#include "Anima.hpp"
 	#include "Cache.hpp"
 	#include "SDL2CharState.hpp"
-	#include "SDL2Displayable.hpp"
 
-class SDL2Character : public Anima<SDL2CharState>/* , public SDL2Displayable */ {
+class SDL2Character : public Anima<SDL2CharState>/*  , public SDL2Displayable   */{
 	public:
 		SDL2Character(const std::string &path);
-		~SDL2Character() = default;
+		~SDL2Character();
 
-		SDL_Surface	&getSurface() /* override */;
+		void	onStateChange(const SDL2CharState &state) override;
+
+		SDL_Texture	&getTexture();
 
 	protected:
 	private:
 
-		SDL_Surface						*_surface;
+		SDL_Texture	*_texture;
 
 };
 

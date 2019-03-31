@@ -88,31 +88,26 @@ const SDL2Graphic::Translations	SDL2Graphic::MajTranslator = {
 	{SDLK_z, 'Z'}
 };
 
+SDL_Renderer	*SDL2Graphic::_renderer = nullptr;
+
 SDL2Graphic::SDL2Graphic(unsigned width, unsigned height):
 	_continue(true),
 	_hasInput(false),
-	_majInput(false)
+	_majInput(false),
+	_win(nullptr)
 {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		throw std::runtime_error(std::string(__func__) + " : " + SDL_GetError());
-	_win = SDL_CreateWindow("Arcade", 0, 0,
+	bool	inits[3] = {0};
+	if ((inits[2] = (SDL_Init(SDL_INIT_VIDEO) < 0))
+		|| (inits[1] = (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) != (IMG_INIT_JPG | IMG_INIT_PNG)))
+		|| (inits[0] = (TTF_Init() < 0)))
+		cancel(inits, __func__);
+	if (!(_win = SDL_CreateWindow("Arcade", 0, 0,
 							static_cast<int>(width),
 							static_cast<int>(height),
-							SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
-	if (!_win) {
-		std::string	error(SDL_GetError());
-		SDL_Quit();
-		throw std::runtime_error(std::string(__func__) + " : " + error);
-	}
-	if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) != (IMG_INIT_JPG | IMG_INIT_PNG)
-		|| TTF_Init() < 0
-		|| !(_font = TTF_OpenFont("./ressources/libs/sdl2/fonts/arial.ttf", 24))) {
-		std::string	err(TTF_GetError());
-		SDL_DestroyWindow(_win);
-		SDL_Quit();
-		throw std::runtime_error(std::string(__func__) + " : " + err);
-	}
-	_surface = SDL_GetWindowSurface(_win);
+							SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI))
+		|| !(_renderer = SDL_CreateRenderer(_win, -1, SDL_RENDERER_ACCELERATED))
+		|| !(_font = TTF_OpenFont("./ressources/libs/sdl2/fonts/arial.ttf", 20)))
+		cancel(true, true, true, __func__);
 }
 
 SDL2Graphic::~SDL2Graphic()
@@ -133,10 +128,9 @@ void	SDL2Graphic::setEntity(float x, float y, IDisplayable &entity)
 		static_cast<int>(_cellDimensions.x),
 		static_cast<int>(_cellDimensions.y)
 	};
-	SDL_Surface		&surface = (asSprite ? asSprite->getSurface() : asChar->getSurface());
-	SDL_BlitScaled(&surface,
+	SDL_RenderCopy(_renderer,
+				   (asSprite ? &asSprite->getTexture() : &asChar->getTexture()),
 				   (asSprite ? &asSprite->getStateData().rect : nullptr),
-				   _surface,
 				   &target);
 }
 
@@ -144,13 +138,19 @@ void	SDL2Graphic::write(int x, int y, const std::string &text)
 {
 	SDL_Color	white = {0xff, 0xff, 0xff, 0xff};
 	SDL_Surface	*surfaceText = TTF_RenderText_Solid(_font, text.c_str(), white);
+	if (!surfaceText)
+		throw std::runtime_error(std::string(__func__) + " : " + TTF_GetError());
+	SDL_Texture	*textureText = SDL_CreateTextureFromSurface(_renderer, surfaceText);
+	if (!textureText)
+		throw std::runtime_error(std::string(__func__) + " : " + SDL_GetError());
 	SDL_Rect	target = {
 		static_cast<int>(x * _cellDimensions.x * text.size()),
 		static_cast<int>(y * _cellDimensions.y),
 		static_cast<int>(_cellDimensions.x),
 		static_cast<int>(_cellDimensions.y)
 	};
-	SDL_BlitScaled(surfaceText, nullptr, _surface, &target);
+	SDL_RenderCopy(_renderer, textureText, NULL, &target);
+	SDL_DestroyTexture(textureText);
 	SDL_FreeSurface(surfaceText);
 }
 
@@ -164,13 +164,20 @@ void	SDL2Graphic::setSize(int x, int y)
 
 bool	SDL2Graphic::update()
 {
-	SDL_UpdateWindowSurface(_win);
+	// SDL_Surface	*zbeb = SDL_CreateRGBSurface(0, 10, 10, 32, 0xff000000, 0x00ff0000, 0x0000ff00, 0x000000ff);
+	// SDL_BlitScaled(zbeb,
+	// 				nullptr,
+	// 			   _surface,
+	// 			   nullptr);
+	// SDL_UpdateWindowSurface(_win);
+	SDL_RenderPresent(_renderer);
+	// SDL_FreeSurface(zbeb);
 	return _continue;
 }
 
 void	SDL2Graphic::clear()
 {
-	SDL_FillRect(_surface, nullptr, 0x0);
+	SDL_RenderClear(_renderer);
 }
 
 IDisplayable    *SDL2Graphic::createDisplayable(const std::string &path)
@@ -212,4 +219,30 @@ int32_t         SDL2Graphic::getInput()
 TTF_Font		&SDL2Graphic::getFont()
 {
 	return *_font;
+}
+
+SDL_Renderer	&SDL2Graphic::getRenderer()
+{
+	return *_renderer;
+}
+
+void			SDL2Graphic::cancel(bool cancels[3], const std::string &func)
+{
+	std::function<void ()>	cancelers[] = {TTF_Quit, IMG_Quit, SDL_Quit};
+	std::string	err(SDL_GetError());
+	for (int i = 0; i < 3; i++) {
+		if (cancels[i])
+			cancelers[i]();
+	}
+	if (_win)
+		SDL_DestroyWindow(_win);
+	if (_renderer)
+		SDL_DestroyRenderer(_renderer);
+	throw std::runtime_error(func + " : " + err);
+}
+
+void			SDL2Graphic::cancel(bool cancel1, bool cancel2, bool cancel3, const std::string &func)
+{
+	bool	cancels[] = {cancel1, cancel2, cancel3};
+	cancel(cancels, func);
 }

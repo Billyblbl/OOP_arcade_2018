@@ -15,7 +15,7 @@ class SDL2Displayable {
 
 		virtual ~SDL2Displayable();
 
-		virtual SDL_Surface	&getSurface() = 0;
+		virtual SDL_Texture	&getTexture() = 0;
 
 	protected:
 	private:
