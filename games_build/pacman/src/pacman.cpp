@@ -30,7 +30,7 @@ Pacman::Pacman():
     _life = 3;
 
     for (int i = 0; i < 4; i++)
-        _ghost.push_back({8.0f + i, 8.0 + i, NONE, nullptr});
+        _ghost.push_back({8.0f + i, 8.0f + i, NONE, nullptr});
     _ghost[0].DIR = UP;
     _ghost[1].DIR = RIGHT;
     _ghost[2].DIR = DOWN;
