@@ -5,7 +5,6 @@
 ** arcade directory menu object method
 */
 
-#include <filesystem>
 #include "DirectoryMenu.hpp"
 
 DirectoryMenu::DirectoryMenu(const std::string &dir,
