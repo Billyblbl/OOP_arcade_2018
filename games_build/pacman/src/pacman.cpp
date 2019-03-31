@@ -39,7 +39,6 @@ Pacman::Pacman()
 
 void Pacman::setGraphic(IGraphic &handler)
 {
-    _screen = &handler;
     if (_screen) {
         delete _pacman.disp;
         delete _wall;
@@ -48,6 +47,7 @@ void Pacman::setGraphic(IGraphic &handler)
         for (unsigned int i = 0; _ghost.size(); i++)
             delete _ghost[i].disp;
     }
+    _screen = &handler;
     _pacman.disp = _screen->createDisplayable("./ressources/games/pacman/entity/pacman.entity");
     _ghost[0].disp = _screen->createDisplayable("./ressources/games/pacman/entity/ghost.entity");
     _ghost[1].disp = _screen->createDisplayable("./ressources/games/pacman/entity/ghost.entity");
