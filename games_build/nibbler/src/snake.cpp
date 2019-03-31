@@ -203,3 +203,11 @@ void Snake::onEnable()
 void Snake::onDisable()
 {
 }
+
+
+extern "C" {
+    IGame *CreateHandler()
+    {
+        return new Snake;
+    }
+}
