@@ -11,6 +11,7 @@
 
 #include <functional>
 #include <chrono>
+#include <thread>
 #include <cstdlib>
 #include <ctime>
 #include <iostream>
@@ -29,7 +30,7 @@ Snake::Snake()
     _map.y = 30;
 
     _dir = NONE;
-
+    _speed = 250;
     _score = 0;
 }
 
@@ -105,6 +106,8 @@ void Snake::collision_food()
             _snake.push_back({_snake[_end].y - 1, _snake[_end].y});
         if (_snake[_end].x == (_snake[_end + 1].y - 1))
             _snake.push_back({_snake[_end].y + 1, _snake[_end].y});
+        else
+            _snake.push_back({_snake[_end].y + 1, _snake[_end].y});
     }
 }
 
@@ -120,14 +123,12 @@ bool Snake::collision_wall()
 
 bool Snake::collision_himself()
 {
-    for (unsigned int i = 1; i < _snake.size(); i++) {
+    for (unsigned int i = 1; i < _snake.size(); i += 1) {
         if ((_snake[0].x == _snake[i].x)
         && (_snake[0].y == _snake[i].y))
             return false;
-        else
-            return true;
     }
-    return (true);
+    return true;
 }
 
 void Snake::display()
@@ -155,6 +156,9 @@ bool Snake::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime)
     (void)deltaT;
     (void)upTime;
     position prev = _snake[0];
+
+    if (_speed > 120)
+        _speed--;
 
     if (_dir == NONE) {
         _score = _snake.size() - 4;
@@ -187,6 +191,7 @@ bool Snake::update(std::chrono::nanoseconds deltaT, std::chrono::seconds upTime)
     if (Snake::collision_himself() == false)
         return false;
     _score = _snake.size() - 4;
+    std::this_thread::sleep_for(std::chrono::milliseconds(_speed));
     Snake::display();
     return true;
 }

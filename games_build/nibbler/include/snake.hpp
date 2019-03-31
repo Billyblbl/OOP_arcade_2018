@@ -55,7 +55,7 @@ class Snake : public IGame
         position _map;
         eDirecton _dir;
         int _score;
-
+        int _speed;
         IGraphic *_screen;
 };
 
